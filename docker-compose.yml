@@ -1,0 +1,14 @@
+version: '3'
+      
+services:
+  deep:
+    build: .
+    restart: always
+    volumes:
+      - ./src:/usr/src/app
+    environment:
+      - FLASK_APP=main.py 
+      - FLASK_DEBUG=1
+    command:  python -m flask run --port 3000 --host 0.0.0.0
+    ports:
+      - "3030:3000"

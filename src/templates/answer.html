@@ -1,0 +1,84 @@
+<div class="table">
+</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>csv</title>
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bulma.min.css') }}" />
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}" />
+
+</head>
+
+<body>
+    <div class="content">
+        <div id="tab" class="columns">
+            <div class="column is-6 is-offset-3">
+                <table class=table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Вопрос
+                            </th>
+                            <th>
+                                Ответ
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                            <tr 
+                            is="tdinput"
+                            v-for="tdinput in tdArray" 
+                            v-bind:key="tdinput.id"
+                            v-bind:qtext="tdinput.qtext"
+                            v-bind:atext="tdinput.atext"
+                            >
+
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column is-3">
+                <a class="button is-success" @click="addTD">Добавить</a>
+                <br>
+                <br>
+                <a class="button is-info" @click="svTD">Сохранить все</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <template id="tdinput">
+        <tr>
+            <td>
+                <span v-on:click='edTable' v-if='vis'>
+                    ${ question }
+                </span>
+                <div v-else>
+                    <textarea class='textarea' v-model="question"></textarea>
+                </div>
+            </td>
+            <td>
+                <span v-on:click='edTable' v-if='vis'>
+                    ${ answer }
+                </span>
+                <div v-else>
+                    <textarea class='textarea' v-model="answer"></textarea>
+                    <a v-on:click="svTable" class='button is-primary'>Сохранить</a>
+                </div>
+            </td>
+        </tr>
+    </template>
+</body>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+
+</html>

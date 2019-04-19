@@ -1,0 +1,3 @@
+Question,Answer
+Can I use module re in Python for text preprocessing ?,"You are allowed to use any standard Python packages, but nothing else beyond what's already imported in the assignment notebook."
+Am I only allowed to use the packages imported in the notebook already? or can I add some?,"We don't allow any additional packages, except standard library."

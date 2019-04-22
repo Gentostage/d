@@ -22,10 +22,9 @@ Vue.component('tdinput', {
     },
     template: '#tdinput ',
     methods: {
-        svTable(){
-            app.tdArray[this._uid-1].qtext=this.question
-            app.tdArray[this._uid-1].atext=this.answer
-            
+        svTable: function(index){
+            app.tdArray.indexOf(this).qtext=this.question
+            app.tdArray.indexOf(this).atext=this.answer
             this.vis = true
   
         },
@@ -33,12 +32,15 @@ Vue.component('tdinput', {
             app.$emit("invis", true);
             this.vis = false
         },
+
     },
     created(){
         app.$on("invis", (vis)=>{
-            app.tdArray[this._uid-1].qtext=this.question
-            app.tdArray[this._uid-1].atext=this.answer
+            app.tdArray.indexOf(this).qtext=this.question
+            app.tdArray.indexOf(this).atext=this.answer
             this.vis = vis;
+            
+
         });
     },
  
@@ -65,24 +67,35 @@ var app = new Vue({
         svTD: function () {
             console.log('svTD')
             this.$emit("invis", true);
+
+            axios.post('/set',{
+                td: this.tdArray
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         },
+        
+
     },
     created()
     {
         axios
-            .get('http://localhost:3030/get')
+            .get('/get')
             .then(response => (
                 response.data.forEach(function(element) {
-                if (element[0] == 'Question'){
-                }else
-                {
                 app.tdArray.push({
                     id: app.nextTodoId++,
                     qtext: element[0],
                     atext: element[1],
                 })
-                }
             })
-            ));
+            )) 
+            .catch(function (error) {
+                console.log(error);
+            });;
     },
 })

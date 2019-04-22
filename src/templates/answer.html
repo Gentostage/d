@@ -27,15 +27,19 @@
                             <th>
                                 Ответ
                             </th>
+                            <th>
+
+                            </th>
                         </tr>
                     </thead>
                     <tbody >
                             <tr 
-                            is="tdinput"
-                            v-for="tdinput in tdArray" 
-                            v-bind:key="tdinput.id"
-                            v-bind:qtext="tdinput.qtext"
-                            v-bind:atext="tdinput.atext"
+                                is="tdinput"
+                                v-for="(tdinput,index) in tdArray" 
+                                v-bind:key="tdinput.id"
+                                v-bind:qtext="tdinput.qtext"
+                                v-bind:atext="tdinput.atext"
+                                v-on:remove="tdArray.splice(index, 1)"
                             >
 
                             </tr>
@@ -54,25 +58,29 @@
     </div>
 
     <template id="tdinput">
-        <tr>
-            <td>
-                <span v-on:click='edTable' v-if='vis'>
-                    ${ question }
-                </span>
-                <div v-else>
-                    <textarea class='textarea' v-model="question"></textarea>
-                </div>
-            </td>
-            <td>
-                <span v-on:click='edTable' v-if='vis'>
-                    ${ answer }
-                </span>
-                <div v-else>
-                    <textarea class='textarea' v-model="answer"></textarea>
-                    <a v-on:click="svTable" class='button is-primary'>Сохранить</a>
-                </div>
-            </td>
-        </tr>
+        <tr> 
+                <td>
+                    <span @click='edTable' v-if='vis'>
+                        ${ question }
+                    </span>
+                    <div v-else>
+                        <textarea class='textarea' v-model="question"></textarea>
+                    </div>
+                </td>
+                <td>
+                    <span @click='edTable' v-if='vis'>
+                        ${ answer }
+                    </span>
+
+                    <div v-else>
+                        <textarea class='textarea' v-model="answer"></textarea>
+                        <a @click="svTable" class='button is-primary'>Сохранить</a>
+                    </div>
+                </td>
+                <td>
+                    <a class="delete" v-on:click="$emit('remove')"></a>
+                </td>
+            </tr>
     </template>
 </body>
 

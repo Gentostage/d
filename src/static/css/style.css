@@ -1,3 +1,22 @@
 td{
     width: 50%;
 }
+.linkbox{
+    margin-top: 10%;
+}
+.link{
+    border-top: 1px solid gainsboro;
+    margin-bottom: 5px;
+    margin-top:5px;
+    padding-left: 10%;
+}
+.nav-bar{
+    border-bottom: 1px solid gainsboro;
+    margin-bottom: 25px;
+}
+.logo{
+    padding-left: 15px;
+}
+.navbar-item img {
+    max-height: 2.75rem;
+}

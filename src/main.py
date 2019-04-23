@@ -5,26 +5,44 @@ import deep as d
 import csv
 import json
 import numpy as np
+import time
+
 
 app = Flask(__name__)
 
 # agent = d.deep()
 
+@app.route("/")
+def index():
+    return render_template('main.html')
 
-@app.route("/<text>")
-def index(text):
+@app.route("/chat")
+def chat():
+    return render_template('chat.html')
+
+@app.route("/api/<text>")
+def api(text):
     # a = str(agent.FAQ(text))
-    # leng = leng(a)
+    # leng = len(a)
     # a = a[2:leng-2]
-    return "a" #answer
+    return 'a' #answer
 
+@app.route("/restart")
+def restart():
+    key = request.args.get('key')
+    if key == 'ECA1B4346991DCB90A179D35AC49AC08':
+        # result=agent.restart()
+        time.sleep(5)
+        return 'result'
+    else:
+        return 'Bad key request'
+       
 
 
 # Страница с меню настроек   
 @app.route("/answer")
 def answer():
     return render_template('answer.html')
-
 
 
 

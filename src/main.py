@@ -1,20 +1,21 @@
 from flask import Flask, request, render_template
 
 import deep as d
-
+import db.db as db
 import csv
 import json
-import numpy as np
-import time
-
 
 app = Flask(__name__)
 
 agent = d.deep()
+db = db.database()
+
 
 @app.route("/")
 def index():
+    row = db.get_db()
     return render_template('main.html')
+
 
 @app.route("/chat")
 def chat():
@@ -22,31 +23,31 @@ def chat():
 
 
 # API FAQ
-@app.route("/api", methods = ['GET','POST'])
+@app.route("/api", methods=['GET', 'POST'])
 def api():
     if request.method == 'POST':
-        data = request.data 
+        data = request.data
         massage = json.loads(data)
         if massage == '':
-            return 
+            return
         a = str(agent.FAQ(massage['massage']))
         leng = len(a)
-        a = a[2:leng-2]
+        a = a[2:leng - 2]
         return a
     else:
         return 'error wrong method'
 
-# Страница с меню настроек   
+
+# Страница с меню настроек
 @app.route("/answer")
 def answer():
     return render_template('answer.html')
 
 
-
-# API Получение списка вопросов 
+# API Получение списка вопросов
 @app.route("/get")
 def get():
-    with open('./data/'+agent.DATANAME, 'r') as fp:
+    with open('./data/' + agent.DATANAME, 'r') as fp:
         reader = csv.reader(fp, delimiter=',', quotechar='"')
         next(reader, None)  # Пропустить Заголовок
         data_read = [row for row in reader]
@@ -54,46 +55,42 @@ def get():
     json_string = json.dumps(data_read)
 
     return json_string
- 
+
+
 # Получние и управление 
 @app.route("/settings")
-def settings(): 
+def settings():
     data = request.args
     # Обучить
     if 'relenr' in data:
         if data['relenr'] == 'on':
             key = request.args.get('key')
             if key == 'ECA1B4346991DCB90A179D35AC49AC08':
-                result=agent.relern()
+                result = agent.relern()
                 return result
     else:
         return "Bad param request "
 
 
 # API Сохраннеие вопросов  
-@app.route("/set" , methods = ['GET','POST'])
+@app.route("/set", methods=['GET', 'POST'])
 def set():
     if request.method == 'POST':
-        data = request.data 
-        tmpdata = json.loads(data) 
+        data = request.data
+        tmpdata = json.loads(data)
         listdata = []
         for tmp in tmpdata['td']:
-            templist =[]
-            templist.append(tmp['qtext'])
-            templist.append(tmp['atext'])
+            templist = [tmp['qtext'], tmp['atext']]
             listdata.append(templist)
-            
-        with open('./data/'+agent.DATANAME, 'w') as fp:
+
+        with open('./data/' + agent.DATANAME, 'w') as fp:
             writer = csv.writer(fp, delimiter=',')
             writer.writerow(["Question", "Answer"])  # Записать заголовок
-            writer.writerows(listdata) 
+            writer.writerows(listdata)
         return 'ok'
-    else:  
+    else:
         return 'error'
 
 
-
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=3000 )
-
-
+    app.run(host='0.0.0.0', port=3000)

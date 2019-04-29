@@ -1,54 +1,54 @@
 {% extends "index.html" %}
 
 {% block content %}
-<div id="chat" class="columns is-centered">
-    <div class="column is-3 chatmodl">
-        <div class="column s-12">
-            <h4 class="title is-4 has-text-right">Чат</h4>
-        </div>
-        <div class="column is-12 dialog">
-            <div 
-                is="mess" 
-                v-for="(m,index) in messArray" 
-                v-bind:key="m.id"
-                v-bind:message="m.message"
-                v-bind:answer="m.answer"
-            > 
-
+    <div id="chat" class="columns is-centered">
+        <div class="column is-6 chatmodl">
+            <div class="column s-12">
+                <h4 class="title is-4 has-text-right">Чат</h4>
             </div>
-        </div>
-        <div id="inputfiled" class="column is-12">
-            <textarea class="chatfield textarea"  
-            v-model="mess"
-            v-on:keyup.13.ctrl='send'
-            >
+            <div class="column is-12 dialog">
+                <div
+                        is="mess"
+                        v-for="(m,index) in messArray"
+                        v-bind:key="m.id"
+                        v-bind:message="m.message"
+                        v-bind:answer="m.answer"
+                >
+
+                </div>
+            </div>
+            <div id="inputfiled" class="column is-12">
+                <textarea class="chatfield textarea"
+                      v-model="mess"
+                      v-on:keyup.13.ctrl='send'
+                >
 
             </textarea>
+            </div>
+            <a class="button is-primary is-inverted send" @click='send'>
+                Отправить
+            </a>
+
+
         </div>
-        <a class="button is-primary is-inverted send" @click='send'>
-            Отправить 
-        </a>
-
-
     </div>
-</div>
 
 
-<template id="mess">
-    <div>
-        <div class="column "
-        v-bind:class="{ 'has-text-right': answer }"
-        >
-            <div class="el">
+    <template id="mess">
+        <div>
+            <div class="column "
+                 v-bind:class="{ 'has-text-right': answer }"
+            >
+                <div class="el">
                     ${message}
+                </div>
             </div>
         </div>
-    </div>
 
-</template>
+    </template>
 
 {% endblock content %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock script %}

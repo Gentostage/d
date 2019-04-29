@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 .vscode
+.idea
+
 src/utils/user_data
 # C extensions
 *.so
@@ -25,6 +27,8 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+db.py___jb_old___
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

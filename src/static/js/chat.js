@@ -14,6 +14,7 @@ Vue.component('mess', {
         },
     },
     template: '#mess',
+
 });
 
 
@@ -30,14 +31,14 @@ var chat = new Vue({
             if (!this.mess){
                 return
             }
-            message = this.mess
-            console.log(message)
-            this.mess =''
+            message = this.mess;
+            console.log(message);
+            this.mess ='';
             this.messArray.push({
                 id: chat.nextTodoId++,
                 message: message,
                 answer: true,
-            })
+            });
             axi.post('/api',{
                 massage: message
             })
@@ -52,16 +53,21 @@ var chat = new Vue({
             .catch(function (error) {
                 console.log(error);
             });
+
         },
 
+
+
     },
-    created()
-    {
+    created(){
         this.messArray.push({
             id: this.nextTodoId++,
             message: 'Привет, о чем ты хотел бы узнать?',
             answer: false,
         })
-    }
-    
+    },
+    updated(){
+           var container = this.$el.querySelector(".dialog");
+           container.scrollTop = container.scrollHeight;
+        }
 });

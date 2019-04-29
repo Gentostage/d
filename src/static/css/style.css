@@ -5,6 +5,9 @@
 td{
     width: 50%;
 }
+.table .textarea{
+    min-height: 300px;
+}
 .linkbox{
     margin-top: 10%;
 }
@@ -32,8 +35,8 @@ td{
 .dialog{
     border: 1px solid  gainsboro;
     box-shadow: 0 0 3px rgba(90, 139, 202, 0.404) inset;
-    max-height: 400px;
-    min-height: 200px;
+    max-height: 600px;
+    min-height: 350px;
     overflow: auto; /* Добавляем полосы прокрутки */
 }
 .dialog .column{

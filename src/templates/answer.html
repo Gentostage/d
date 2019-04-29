@@ -19,8 +19,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr is="tdinput" v-for="(tdinput,index) in tdArray" v-bind:key="tdinput.id"
-                        v-bind:qtext="tdinput.qtext" v-bind:atext="tdinput.atext"
+                    <tr is="tdinput" 
+                        v-for="(tdinput,index) in tdArray" 
+                        v-bind:key="tdinput.id"
+                        v-bind:id="index"
+                        v-bind:qtext="tdinput.qtext" 
+                        v-bind:atext="tdinput.atext"
                         v-on:remove="tdArray.splice(index, 1)">
 
                     </tr>
@@ -28,15 +32,26 @@
             </table>
         </div>
         <div class="column is-3 pult">
-            <a class="button is-success" @click="addTD">Добавить</a>
 
-            <a class="button is-primary is-outlined" v-bind:class="{ 'is-loading': loadButtom }"
-                @click="refrDp">Обучить</a>
-
-
-            <br>
-            <br>
             <a class="button is-info" @click="svTD">Сохранить все</a>
+            
+            <br>
+            <br>
+
+            <a class="button is-success" 
+                @click="addTD"
+            >Добавить</a>
+
+            <br>
+            <br>
+
+            <a class="button is-primary is-outlined" 
+                v-bind:class="{ 'is-loading': loadButtom }"
+                @click="refrDp"
+            >Обучить</a>
+
+            <br>
+            <br>
 
         </div>
 
@@ -70,3 +85,7 @@
     </tr>
 </template>
 {% endblock content %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock script %}

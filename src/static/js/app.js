@@ -14,6 +14,7 @@ Vue.component('tdinput', {
             default: '',
             required: true
         },
+        id: Number
     },
     data: function () {
         return {
@@ -27,8 +28,8 @@ Vue.component('tdinput', {
     methods: {
         // Сохранить кнопка 
         svTable: function(index){
-            app.tdArray.indexOf(this).qtext=this.question
-            app.tdArray.indexOf(this).atext=this.answer
+            app.tdArray[this.id].qtext=this.question
+            app.tdArray[this.id].atext=this.answer
             this.vis = true
   
         },
@@ -42,10 +43,10 @@ Vue.component('tdinput', {
     created(){
         // Сохранить ВСЕ изменениев таблице и закрыть текстовое поле
         app.$on("invis", (vis)=>{
-            app.tdArray.indexOf(this).qtext=this.question
-            app.tdArray.indexOf(this).atext=this.answer
+            app.tdArray[this.id].qtext=this.question
+            app.tdArray[this.id].atext=this.answer
             this.vis = vis;
-            
+  
 
         });
     },
@@ -62,6 +63,7 @@ var app = new Vue({
         qtext: 'Вопрос',
         atext: 'Ответ',
         loadButtom: false,
+        status: false,
     },
     methods: {
         // Добавялем новое обращение 
@@ -86,13 +88,14 @@ var app = new Vue({
                 console.log(error);
             });
         },
-        // перезапустить нейросеть
+        // перезапустить и обучить нейросеть
         refrDp: function(){
             this.loadButtom = true
-            axi.get('/restart',{
+            axi.get('/settings',{
                 timeout: 1000000,
                 params: {
-                    key: 'ECA1B4346991DCB90A179D35AC49AC08'
+                    key: 'ECA1B4346991DCB90A179D35AC49AC08',
+                    relenr: 'on'
                 }
                 
             })
@@ -103,12 +106,11 @@ var app = new Vue({
             .catch(function (error) {
                 console.log(error);
             });
-
-        }
-        
+        },
 
     },
     created()
+    // init()
     {
         //Получение списка вопросов и ответов
         axi
@@ -125,5 +127,6 @@ var app = new Vue({
         .catch(function (error) {
             console.log(error);
         });;
+       
     },
 })

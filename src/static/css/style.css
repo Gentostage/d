@@ -1,7 +1,15 @@
 [v-cloak] {
     display: none;
 }
-
+.pult{
+    position: fixed;
+    right: 15px;
+    top: 100px;
+    border: 1px solid gainsboro;
+    padding: 20px 0px 0px 20px;
+    border-radius: 5px;
+    width: 23%;
+}
 td{
     width: 50%;
 }

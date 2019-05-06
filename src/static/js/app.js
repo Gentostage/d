@@ -73,6 +73,7 @@ var app = new Vue({
                 qtext: this.qtext,
                 atext: this.atext,
             })
+            window.scrollTo(0,document.body.scrollHeight);
         },
         // Сохраняем все обращения 
         svTD: function () {

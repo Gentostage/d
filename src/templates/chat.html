@@ -18,9 +18,8 @@
                 </div>
             </div>
             <div id="inputfiled" class="column is-12">
-                <textarea class="chatfield textarea"
-                      v-model="mess"
-                      v-on:keyup.13.ctrl='send'
+                <textarea ref="message" class="chatfield textarea"
+                          v-on:keyup.13.ctrl='send'
                 >
 
             </textarea>

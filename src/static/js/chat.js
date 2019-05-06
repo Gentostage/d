@@ -28,6 +28,10 @@ var chat = new Vue({
     },
     methods:{
         send: function(){
+            this.mess=this.$refs.message.value;
+            this.$refs.message.value='';
+            this.$refs.message.focus();
+
             if (!this.mess){
                 return
             }
@@ -55,9 +59,6 @@ var chat = new Vue({
             });
 
         },
-
-
-
     },
     created(){
         this.messArray.push({
@@ -67,7 +68,7 @@ var chat = new Vue({
         })
     },
     updated(){
-           var container = this.$el.querySelector(".dialog");
-           container.scrollTop = container.scrollHeight;
-        }
+        var container = this.$el.querySelector(".dialog");
+        container.scrollTop = container.scrollHeight;
+    }
 });

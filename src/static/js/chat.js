@@ -43,6 +43,7 @@ var chat = new Vue({
                 message: message,
                 answer: true,
             });
+
             axi.post('/api',{
                 massage: message
             })

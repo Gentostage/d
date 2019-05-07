@@ -10,6 +10,24 @@
     border-radius: 5px;
     width: 23%;
 }
+.list-category{
+    position: fixed;
+    top: 61px;
+    bottom: 0;
+    margin: 10px;
+    top: 100px;
+}
+.list-category .columns{
+    display: block;
+    height: 100%;
+}
+.list-category .columns .column{
+    margin: 0px;
+    padding: 3px;
+}
+
+
+
 td{
     width: 50%;
 }

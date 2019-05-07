@@ -2,18 +2,40 @@ from flask import Flask, request, render_template
 
 import deep as d
 import db.db as db
-import csv
-import json
+import csv, json, os
+
 
 app = Flask(__name__)
 
 agent = d.deep()
-db = db.database()
+# db = db.database()
+
+#  Считать фаил данных
+# Name имя файла по дефолту первый
+def openfile(name):
+    files = os.listdir(path="./data")
+    # При загрузки страницы выдавал первый фаил не скомпилированный
+    if name == 'default':
+        if files[0]!='dataset.csv':
+            name = files[0]
+        else:
+            name = files[1]
+    else:
+        name = name+'.csv'
+    # Сам код считывания файла
+
+    if name in files:
+        print(name)
+        with open('./data/' + name, 'r') as fp:
+            reader = csv.reader(fp, delimiter=',', quotechar='"')
+            next(reader, None)  # Пропустить Заголовок
+            data_read = [row for row in reader]
+            json_string = json.dumps(data_read)
+        return json_string
 
 
 @app.route("/")
 def index():
-    row = db.get_db()
     return render_template('main.html')
 
 
@@ -47,14 +69,17 @@ def answer():
 # API Получение списка вопросов
 @app.route("/get")
 def get():
-    with open('./data/' + agent.DATANAME, 'r') as fp:
-        reader = csv.reader(fp, delimiter=',', quotechar='"')
-        next(reader, None)  # Пропустить Заголовок
-        data_read = [row for row in reader]
-
-    json_string = json.dumps(data_read)
-
-    return json_string
+    data = request.args
+    if 'name' in data:
+        json_string = openfile(data['name'])
+        return json_string
+    elif 'list' in data:
+        files=(os.listdir(path="./data"))
+        files.remove('dataset.csv')
+        files = json.dumps(files)
+        return files
+    else:
+        return 'Error name data'
 
 
 # Получние и управление 

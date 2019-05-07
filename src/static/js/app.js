@@ -1,4 +1,3 @@
-
 const axi = axios.create();
 
 Vue.component('tdinput', {
@@ -27,11 +26,11 @@ Vue.component('tdinput', {
     template: '#tdinput ',
     methods: {
         // Сохранить кнопка 
-        svTable: function(index){
-            app.tdArray[this.id].qtext=this.question
-            app.tdArray[this.id].atext=this.answer
+        svTable: function (index) {
+            app.tdArray[this.id].qtext = this.question
+            app.tdArray[this.id].atext = this.answer
             this.vis = true
-  
+
         },
         // Показать поле редактирование и скрыть все остальные 
         edTable() {
@@ -40,19 +39,18 @@ Vue.component('tdinput', {
         },
 
     },
-    created(){
+    created() {
         // Сохранить ВСЕ изменениев таблице и закрыть текстовое поле
-        app.$on("invis", (vis)=>{
-            app.tdArray[this.id].qtext=this.question
-            app.tdArray[this.id].atext=this.answer
+        app.$on("invis", (vis) => {
+            app.tdArray[this.id].qtext = this.question
+            app.tdArray[this.id].atext = this.answer
             this.vis = vis;
-  
+
 
         });
     },
- 
-})
 
+});
 
 var app = new Vue({
     delimiters: ['${', '}'],
@@ -62,6 +60,11 @@ var app = new Vue({
         nextTodoId: 0,
         qtext: 'Вопрос',
         atext: 'Ответ',
+
+        listCategory: [],
+        nextCat: 0,
+
+        activCat: '',
         loadButtom: false,
         status: false,
     },
@@ -73,61 +76,104 @@ var app = new Vue({
                 qtext: this.qtext,
                 atext: this.atext,
             })
-            window.scrollTo(0,document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
         },
         // Сохраняем все обращения 
         svTD: function () {
             this.$emit("invis", true);
 
-            axi.post('/set',{
+            axi.post('/set', {
                 td: this.tdArray
             })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         // перезапустить и обучить нейросеть
-        refrDp: function(){
-            this.loadButtom = true
-            axi.get('/settings',{
+        refrDp: function () {
+            this.loadButtom = true;
+            axi.get('/settings', {
                 timeout: 1000000,
                 params: {
                     key: 'ECA1B4346991DCB90A179D35AC49AC08',
                     relenr: 'on'
                 }
-                
+
+            })
+                .then(function (response) {
+                    console.log(response);
+                    app.loadButtom = false;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        //Загрузка категории
+        loadCat: function (loadCat) {
+            this.nextTodoId = 0;
+            this.tdArray = [];
+            axi.get('/get', {
+                params: {
+                    name: loadCat
+                }
             })
             .then(function (response) {
-                console.log(response);
-                app.loadButtom = false;
-            })
+                console.log(response)
+                response.data.forEach(function (element) {
+                    app.tdArray.push({
+                        id: app.nextTodoId++,
+                        qtext: element[0],
+                        atext: element[1],
+                    })
+                })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            app.activCat= loadCat;
+
+        }
+    },
+    beforeCreate()
+    // init()
+    {//Получение списка вопросов и ответов при загрузке страницы
+        axi.get('/get', {
+            params: {
+                name: 'default'
+            }
+        })
+            .then(response => (
+                response.data.forEach(function (element) {
+                    app.tdArray.push({
+                        id: app.nextTodoId++,
+                        qtext: element[0],
+                        atext: element[1],
+                    })
+                })
+            ))
             .catch(function (error) {
                 console.log(error);
             });
-        },
 
-    },
-    created()
-    // init()
-    {
-        //Получение списка вопросов и ответов
-        axi
-        .get('/get')
-        .then(response => (
-            response.data.forEach(function(element) {
-            app.tdArray.push({
-                id: app.nextTodoId++,
-                qtext: element[0],
-                atext: element[1],
-            })
+        axi.get('/get', {
+            params: {
+                list: 'list'
+            }
         })
-        )) 
-        .catch(function (error) {
-            console.log(error);
-        });;
-       
+            .then(response => (
+                response.data.forEach(function (element) {
+                    app.listCategory.push({
+                        id: app.nextCat++,
+                        text: element.slice(0, -4),
+                    });
+                })
+            ))
+            .catch(function (error) {
+                console.log(error);
+            });
+
     },
 })

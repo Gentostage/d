@@ -1,11 +1,26 @@
 {% extends "index.html" %}
 
 {% block content %}
-<div class="content">
-    <div id="tab" class="columns">
-        <div class="column is-6 is-offset-3">
-            <table class=table>
-                <thead>
+    <div class="content">
+        <div id="tab" class="columns">
+            <div class="column is-2 list-category">
+                <div class="columns is-vcentered has-text-centered">
+                    <div class="column"><span class="is-size-4">Категории</span></div>
+                    <div
+                            v-for="(list, index) in listCategory">
+                              <div class="column">
+                                  <a class="button is-fullwidth"
+                                    @click="loadCat(list.text)">
+                                    ${list.text}
+                                  </a>
+                              </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="column is-7 is-offset-2">
+                <table class=table>
+                    <thead>
                     <tr>
                         <th>
                             Вопрос
@@ -17,75 +32,76 @@
 
                         </th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr is="tdinput" 
-                        v-for="(tdinput,index) in tdArray" 
+                    </thead>
+                    <tbody>
+                    <tr is="tdinput"
+                        v-for="(tdinput,index) in tdArray"
                         v-bind:key="tdinput.id"
                         v-bind:id="index"
-                        v-bind:qtext="tdinput.qtext" 
+                        v-bind:qtext="tdinput.qtext"
                         v-bind:atext="tdinput.atext"
-                        v-on:remove="tdArray.splice(index, 1)">
+                        v-on:remove="tdArray.splice(index, 1)"
+                        ref="td">
 
                     </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pult">
+                    </tbody>
+                </table>
+            </div>
+            <div class="pult">
 
-            <a class="button is-info" @click="svTD">Сохранить все</a>
-            
-            <br>
-            <br>
+                <a class="button is-info" @click="svTD">Сохранить все</a>
 
-            <a class="button is-success" 
-                @click="addTD"
-            >Добавить</a>
+                <br>
+                <br>
 
-            <br>
-            <br>
+                <a class="button is-success"
+                   @click="addTD"
+                >Добавить</a>
 
-            <a class="button is-primary is-outlined" 
-                v-bind:class="{ 'is-loading': loadButtom }"
-                @click="refrDp"
-            >Обучить</a>
+                <br>
+                <br>
 
-            <br>
-            <br>
+                <a class="button is-primary is-outlined"
+                   v-bind:class="{ 'is-loading': loadButtom }"
+                   @click="refrDp"
+                >Обучить</a>
+
+                <br>
+                <br>
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
-
-<template id="tdinput">
-    <tr>
-        <td>
+    <template id="tdinput">
+        <tr>
+            <td>
             <span @click='edTable' v-if='vis'>
                 ${ question }
             </span>
-            <div v-else>
-                <textarea class='textarea' v-model="question"></textarea>
-            </div>
-        </td>
-        <td>
+                <div v-else>
+                    <textarea class='textarea' v-model="question"></textarea>
+                </div>
+            </td>
+            <td>
             <span @click='edTable' v-if='vis'>
                 ${ answer }
             </span>
 
-            <div v-else>
-                <textarea class='textarea' v-model="answer"></textarea>
-                <a @click="svTable" class='button is-primary'>Сохранить</a>
-            </div>
-        </td>
-        <td>
-            <a class="delete" v-on:click="$emit('remove')"></a>
-        </td>
-    </tr>
-</template>
+                <div v-else>
+                    <textarea class='textarea' v-model="answer"></textarea>
+                    <a @click="svTable" class='button is-primary'>Сохранить</a>
+                </div>
+            </td>
+            <td>
+                <a class="delete" v-on:click="$emit('remove')"></a>
+            </td>
+        </tr>
+    </template>
 {% endblock content %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock script %}

@@ -36,7 +36,6 @@ var chat = new Vue({
                 return
             }
             message = this.mess;
-            console.log(message);
             this.mess ='';
             this.messArray.push({
                 id: chat.nextTodoId++,

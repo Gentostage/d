@@ -10,7 +10,8 @@
                             v-for="(list, index) in listCategory">
                               <div class="column">
                                   <a class="button is-fullwidth"
-                                    @click="loadCat(list.text)">
+                                     v-on:click="loadCat(list.text, index)"
+                                     :disabled="list.activ">
                                     ${list.text}
                                   </a>
                               </div>

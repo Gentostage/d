@@ -26,27 +26,25 @@ Vue.component('tdinput', {
     template: '#tdinput ',
     methods: {
         // Сохранить кнопка 
-        svTable: function (index) {
-            app.tdArray[this.id].qtext = this.question
-            app.tdArray[this.id].atext = this.answer
-            this.vis = true
-
+        svTable () {
+            this.saveTable()
         },
         // Показать поле редактирование и скрыть все остальные 
         edTable() {
-            app.$emit("invis", true);
+            app.$emit("invis");
             this.vis = false
         },
+        saveTable(){
+            app.tdArray[this.id].qtext = this.question;
+            app.tdArray[this.id].atext = this.answe;
+            this.vis = true;
+        }
 
     },
     created() {
         // Сохранить ВСЕ изменениев таблице и закрыть текстовое поле
-        app.$on("invis", (vis) => {
-            app.tdArray[this.id].qtext = this.question
-            app.tdArray[this.id].atext = this.answer
-            this.vis = vis;
-
-
+        app.$on("invis", ()=>  {
+            this.saveTable()
         });
     },
 
@@ -63,8 +61,8 @@ var app = new Vue({
 
         listCategory: [],
         nextCat: 0,
+        activCat: [],
 
-        activCat: '',
         loadButtom: false,
         status: false,
     },
@@ -75,7 +73,7 @@ var app = new Vue({
                 id: this.nextTodoId++,
                 qtext: this.qtext,
                 atext: this.atext,
-            })
+            });
             window.scrollTo(0, document.body.scrollHeight);
         },
         // Сохраняем все обращения 
@@ -112,7 +110,15 @@ var app = new Vue({
                 });
         },
         //Загрузка категории
-        loadCat: function (loadCat) {
+        loadCat: function (loadCat, index) {
+
+            if (index == this.activCat.id){
+                return
+            }
+            this.listCategory[this.activCat.id].activ=false;
+            this.listCategory[index].activ=true;
+            this.activCat=this.listCategory[index];
+
             this.nextTodoId = 0;
             this.tdArray = [];
             axi.get('/get', {
@@ -121,7 +127,7 @@ var app = new Vue({
                 }
             })
             .then(function (response) {
-                console.log(response)
+                console.log(response);
                 response.data.forEach(function (element) {
                     app.tdArray.push({
                         id: app.nextTodoId++,
@@ -133,7 +139,6 @@ var app = new Vue({
                 .catch(function (error) {
                     console.log(error);
                 });
-            app.activCat= loadCat;
 
         }
     },
@@ -151,29 +156,37 @@ var app = new Vue({
                         id: app.nextTodoId++,
                         qtext: element[0],
                         atext: element[1],
-                    })
-                })
-            ))
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        axi.get('/get', {
-            params: {
-                list: 'list'
-            }
-        })
-            .then(response => (
-                response.data.forEach(function (element) {
-                    app.listCategory.push({
-                        id: app.nextCat++,
-                        text: element.slice(0, -4),
                     });
                 })
             ))
             .catch(function (error) {
                 console.log(error);
             });
+
+        first = true;
+        axi.get('/get', {
+            params: {
+                list: 'list'
+            }
+        })
+        .then(response => (
+            response.data.forEach(function (element) {
+                app.listCategory.push({
+                    id: app.nextCat,
+                    text: element.slice(0, -4),
+                    activ: first,
+                });
+                if(first){
+                    app.activCat=app.listCategory[0];
+                }
+                app.nextCat++;
+                first=false;
+
+            })
+        ))
+        .catch(function (error) {
+            console.log(error);
+        });
 
     },
 })

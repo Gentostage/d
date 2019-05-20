@@ -36,7 +36,7 @@ Vue.component('tdinput', {
         },
         saveTable(){
             app.tdArray[this.id].qtext = this.question;
-            app.tdArray[this.id].atext = this.answe;
+            app.tdArray[this.id].atext = this.answer;
             this.vis = true;
         }
 
@@ -81,7 +81,8 @@ var app = new Vue({
             this.$emit("invis", true);
 
             axi.post('/set', {
-                td: this.tdArray
+                td: this.tdArray,
+                name: app.activCat.text+'.csv',
             })
                 .then(function (response) {
                     console.log(response);

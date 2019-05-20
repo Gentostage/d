@@ -25,7 +25,6 @@ def openfile(name):
     # Сам код считывания файла
 
     if name in files:
-        print(name)
         with open('./data/' + name, 'r') as fp:
             reader = csv.reader(fp, delimiter=',', quotechar='"')
             next(reader, None)  # Пропустить Заголовок
@@ -103,12 +102,13 @@ def set():
     if request.method == 'POST':
         data = request.data
         tmpdata = json.loads(data)
+        print(tmpdata)
         listdata = []
         for tmp in tmpdata['td']:
             templist = [tmp['qtext'], tmp['atext']]
             listdata.append(templist)
 
-        with open('./data/' + agent.DATANAME, 'w') as fp:
+        with open('./data/' + tmpdata['name'], 'w') as fp:
             writer = csv.writer(fp, delimiter=',')
             writer.writerow(["Question", "Answer"])  # Записать заголовок
             writer.writerows(listdata)

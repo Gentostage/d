@@ -1,0 +1,13 @@
+version: '3'
+      
+services:
+  deep:
+    build: .
+    restart: always
+    volumes:
+      - ./src:/usr/src/app
+    environment:
+      - FLASK_APP=main.py
+    command: python main.py
+    ports:
+      - "3030:3000"

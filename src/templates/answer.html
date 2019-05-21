@@ -1,21 +1,28 @@
 {% extends "index.html" %}
 
 {% block content %}
+
+
+
     <div class="content">
         <div id="tab" class="columns">
             <div class="column is-2 list-category">
                 <div class="columns is-vcentered has-text-centered">
                     <div class="column"><span class="is-size-4">Категории</span></div>
-                    <div    v-cloak
-                            v-for="(list, index) in listCategory">
-                              <div class="column">
-                                  <a class="button is-fullwidth"
-                                     v-on:click="loadCat(list.text, index)"
-                                     :disabled="list.activ">
-                                    ${list.text}
-                                  </a>
-                              </div>
+                    <div v-cloak
+                         v-for="(list, index) in listCategory">
+                        <div class="column">
+                            <a class="button is-fullwidth"
+                               v-on:click="loadCat(index)"
+                               :disabled="list.activ">
+                                ${list.text}
+                            </a>
+                        </div>
                     </div>
+                    <div class="column">
+                        <a class="button is-fullwidth is-success" v-on:click="noModal">Редактировать</a>
+                    </div>
+
                 </div>
 
             </div>
@@ -48,32 +55,51 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="pult">
-
                 <a class="button is-info" @click="svTD">Сохранить все</a>
-
                 <br>
                 <br>
-
                 <a class="button is-success"
                    @click="addTD"
                 >Добавить</a>
-
                 <br>
                 <br>
-
                 <a class="button is-primary is-outlined"
                    v-bind:class="{ 'is-loading': loadButtom }"
                    @click="refrDp"
                 >Обучить</a>
-
                 <br>
                 <br>
+            </div>
 
+            <div class="modal" v-if="modal" v-cloak>
+                <div class="modal-background" v-on:click="offModal"></div>
+                <div class="modal-content">
+                    <div class="box">
+                        <div v-cloak
+                             v-for="(list, index) in listCategory">
+
+                            <div class="columns is-vcentered">
+                                <div class="column is-offset-1">
+                                    <input class="input" type="text" v-model="list.text">
+                                </div>
+                                <div class="column is-2">
+                                    <a class="delete" v-on:click="deletCat(index)"></a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="column is-8 is-offset-2">
+                            <a  class="button is-fullwidth" v-on:click="addCat"> Добавить</a>
+                        </div>
+
+                    </div>
+                </div>
+                <button class="modal-close is-large" aria-label="close" v-on:click="offModal"></button>
             </div>
 
         </div>
-
     </div>
 
     <template id="tdinput">
@@ -101,6 +127,10 @@
             </td>
         </tr>
     </template>
+
+
+
+
 {% endblock content %}
 
 {% block script %}

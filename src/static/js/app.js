@@ -50,6 +50,12 @@ Vue.component('tdinput', {
 
 });
 
+
+
+
+
+
+
 var app = new Vue({
     delimiters: ['${', '}'],
     el: '#tab',
@@ -65,9 +71,41 @@ var app = new Vue({
 
         loadButtom: false,
         status: false,
+        modal: false,
     },
     methods: {
-        // Добавялем новое обращение 
+        noModal: function(){
+            this.modal=true;
+        },
+        offModal:function(){
+            this.modal=false;
+        },
+        deletCat: function(index){
+            if(index==this.activCat.id){
+                console.log(this.listCategory.length, index+1);
+                if(this.listCategory.length==index+1){
+                    console.log('1');
+                    this.activCat=this.listCategory[index-1];
+                    this.listCategory[index-1].activ=true;
+                }else{
+                    console.log('2');
+                    this.activCat=this.listCategory[index+1];
+                    this.listCategory[index+1].activ=true;
+
+                }
+            }
+            this.listCategory.splice(index, 1);
+        },
+        addCat: function(index){
+            console.log('add')
+            this.listCategory.push({
+                id: this.nextTodoId++,
+                text: 'Новая категория',
+                activ: false,
+            });
+        },
+
+        // Добавялем новое обращение
         addTD: function () {
             this.tdArray.push({
                 id: this.nextTodoId++,
@@ -76,10 +114,10 @@ var app = new Vue({
             });
             window.scrollTo(0, document.body.scrollHeight);
         },
+
         // Сохраняем все обращения 
         svTD: function () {
             this.$emit("invis", true);
-
             axi.post('/set', {
                 td: this.tdArray,
                 name: app.activCat.text+'.csv',
@@ -91,6 +129,7 @@ var app = new Vue({
                     console.log(error);
                 });
         },
+
         // перезапустить и обучить нейросеть
         refrDp: function () {
             this.loadButtom = true;
@@ -110,21 +149,23 @@ var app = new Vue({
                     console.log(error);
                 });
         },
+
         //Загрузка категории
-        loadCat: function (loadCat, index) {
+        loadCat: function (index) {
 
             if (index == this.activCat.id){
                 return
             }
             this.listCategory[this.activCat.id].activ=false;
             this.listCategory[index].activ=true;
-            this.activCat=this.listCategory[index];
+            this.activCat.text=this.listCategory[index].text;
+            this.activCat.id=index;
 
             this.nextTodoId = 0;
             this.tdArray = [];
             axi.get('/get', {
                 params: {
-                    name: loadCat
+                    name: app.listCategory[index].text
                 }
             })
             .then(function (response) {

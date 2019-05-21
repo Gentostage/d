@@ -1,3 +1,9 @@
+.modal{
+    display: grid;
+}
+.modal-content{
+    width: 430px;
+}
 [v-cloak] {
     display: none;
 }
@@ -25,8 +31,6 @@
     margin: 0px;
     padding: 3px;
 }
-
-
 
 td{
     width: 50%;

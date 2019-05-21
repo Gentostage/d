@@ -3,13 +3,15 @@ from deeppavlov.agents.default_agent.default_agent import DefaultAgent
 from deeppavlov.agents.processors.highest_confidence_selector import HighestConfidenceSelector
 from deeppavlov.contrib.skills.similarity_matching_skill import SimilarityMatchingSkill
 
+import pandas as pd
+import os
 
 class deep:
     TRAIN = False
     DATANAME = 'dataset.csv'
     MODELNAME = 'model1'
 
-    def learn(self):
+    def learn(self, train):
         hello = PatternMatchingSkill(responses=['Привет!', 'Здравствуйте', 'Добрый день'],
                                      patterns=['Привет', 'Здравствуйте', 'Добрый день'])
         bye = PatternMatchingSkill(responses=['Пока!', 'До свидания, надеюсь смог вам помочь', 'До встречи!'],
@@ -22,18 +24,19 @@ class deep:
                                       y_col_name='Answer',
                                       save_load_path='./model/' + self.MODELNAME,
                                       config_type='tfidf_autofaq',
-                                      train=self.TRAIN)
+                                      train=train)
         self.d = DefaultAgent([hello, bye, faq, fallback], skills_selector=HighestConfidenceSelector())
 
     def __init__(self):
-        self.learn()
+        self.learn(False)
 
     def FAQ(self, text):
         text = self.d([text])
         return text
 
     def relern(self):
-        self.TRAIN = True
-        self.learn()
-        self.TRAIN = False
+        filenames = os.listdir(path="./data")
+        combined_csv = pd.concat([pd.read_csv('./data/' + f) for f in filenames])
+        combined_csv.to_csv('./data/' + self.DATANAME, index=False)
+        self.learn(True)
         return "ok"

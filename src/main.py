@@ -4,13 +4,12 @@ import deep as d
 import db.db as db
 import csv, json, os
 
-
 app = Flask(__name__)
 
 agent = d.deep()
 # db = db.database()
 
-#  Считать фаил данных
+# Считать фаил данных
 # Name имя файла по дефолту первый
 def openfile(name):
     files = os.listdir(path="./data")
@@ -22,8 +21,7 @@ def openfile(name):
             name = files[1]
     else:
         name = name+'.csv'
-    # Сам код считывания файла
-
+    # Считывания файла
     if name in files:
         with open('./data/' + name, 'r') as fp:
             reader = csv.reader(fp, delimiter=',', quotechar='"')
@@ -65,7 +63,7 @@ def answer():
     return render_template('answer.html')
 
 
-# API Получение списка вопросов
+# Получение списка вопросов
 @app.route("/get")
 def get():
     data = request.args
@@ -96,13 +94,12 @@ def settings():
         return "Bad param request "
 
 
-# API Сохраннеие вопросов  
+#Сохраннеие вопросов
 @app.route("/set", methods=['GET', 'POST'])
 def set():
     if request.method == 'POST':
         data = request.data
         tmpdata = json.loads(data)
-        print(tmpdata)
         listdata = []
         for tmp in tmpdata['td']:
             templist = [tmp['qtext'], tmp['atext']]

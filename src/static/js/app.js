@@ -77,7 +77,6 @@ var app = new Vue({
             this.modal = false;
         },
         deletCat: function (index) {
-            // TODO Отправлять какой фаил надо удалить
             axi.get('settings',{
                 params: {
                     params: 'deleteCat',
@@ -116,10 +115,23 @@ var app = new Vue({
                 active = false;
             }
             this.listCategory.push({
-                id: this.nextTodoId++,
-                name: 'Новая категория ' + this.nextTodoId,
+                id: this.nextCat++,
+                name: 'Новая категория ' + this.nextCat,
                 activ: active,
             });
+            axi.get('/settings',{
+                params:{
+                    params: 'newCat',
+                    name: 'Новая категория ' + this.nextCat
+                }    
+            })
+                .then(function(response){
+                    console.log(response)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+            
         },
         editCat: function (index, value) {
             //TODO попытаться ускорить смену имени в главном меню, большая задержка
@@ -140,7 +152,6 @@ var app = new Vue({
                         console.log(error)
                     })
             }, 2000);
-
         },
         // Добавялем новое обращение
         addTD: function () {

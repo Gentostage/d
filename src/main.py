@@ -97,10 +97,14 @@ def settings():
             new = os.path.join('./data', data['newName']+'.csv')
             os.rename(old, new)
             return new, 200
-        #TODO Не работает хз че делать
         elif data['params'] == 'deleteCat':
             #os.remove('./data/'+data['name']+'.csv')
             os.rename('./data/'+data['name']+'.csv','./data/deleted/'+str(randint(100000, 1000000))+'_'+data['name']+'.csv')
+            return data['name'],200
+        elif data['params'] == 'newCat':
+            with open('./data/' + data['name']+'.csv', 'w+') as fp:
+                writer = csv.writer(fp, delimiter=',')
+                writer.writerow(["Question", "Answer"])
             return data['name'],200
     else:
         return "Bad param request ", 400

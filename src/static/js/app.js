@@ -26,15 +26,15 @@ Vue.component('tdinput', {
     template: '#tdinput ',
     methods: {
         // Сохранить кнопка 
-        svTable () {
+        svTable() {
             this.saveTable()
         },
         // Показать поле редактирование и скрыть все остальные 
         edTable() {
-            app.$emit("invis");
-            this.vis = false
+            this.saveTable();
+            this.vis = false;
         },
-        saveTable(){
+        saveTable() {
             app.tdArray[this.id].qtext = this.question;
             app.tdArray[this.id].atext = this.answer;
             this.vis = true;
@@ -42,18 +42,10 @@ Vue.component('tdinput', {
 
     },
     created() {
-        // Сохранить ВСЕ изменениев таблице и закрыть текстовое поле
-        app.$on("invis", ()=>  {
-            this.saveTable()
-        });
+
     },
 
 });
-
-
-
-
-
 
 
 var app = new Vue({
@@ -67,44 +59,89 @@ var app = new Vue({
 
         listCategory: [],
         nextCat: 0,
-        activCat: [],
+        activCat: 0,
 
         loadButtom: false,
         status: false,
         modal: false,
+        timerId: null
     },
     methods: {
-        noModal: function(){
-            this.modal=true;
+        //Работа со списком категорий
+        noModal: function () {
+            this.saveListCategotyOnServer;
+            this.modal = true;
         },
-        offModal:function(){
-            this.modal=false;
+        offModal: function () {
+            this.saveListCategotyOnServer;
+            this.modal = false;
         },
-        deletCat: function(index){
-            if(index==this.activCat.id){
-                console.log(this.listCategory.length, index+1);
-                if(this.listCategory.length==index+1){
-                    console.log('1');
-                    this.activCat=this.listCategory[index-1];
-                    this.listCategory[index-1].activ=true;
-                }else{
-                    console.log('2');
-                    this.activCat=this.listCategory[index+1];
-                    this.listCategory[index+1].activ=true;
-
+        deletCat: function (index) {
+            // TODO Отправлять какой фаил надо удалить
+            axi.get('settings',{
+                params: {
+                    params: 'deleteCat',
+                    name: app.listCategory[index].name,
                 }
+            })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            if (this.listCategory.length !== 1) {
+                if (index === this.activCat) {
+                    if (this.listCategory.length === index + 1) {
+                        this.activCat = index - 1;
+                        this.listCategory[index - 1].activ = true;
+                        this.getTDformCat(index - 1);
+                    } else {
+                        this.activCat = index;
+                        this.listCategory[index + 1].activ = true;
+                        this.getTDformCat(index + 1);
+                    }
+                }
+            } else {
+                this.tdArray = [];
+                this.activCat = 0;
             }
             this.listCategory.splice(index, 1);
         },
-        addCat: function(index){
-            console.log('add')
+        addCat: function (index) {
+            if (this.listCategory.length === 0) {
+                active = true;
+            } else {
+                active = false;
+            }
             this.listCategory.push({
                 id: this.nextTodoId++,
-                text: 'Новая категория',
-                activ: false,
+                name: 'Новая категория ' + this.nextTodoId,
+                activ: active,
             });
         },
+        editCat: function (index, value) {
+            //TODO попытаться ускорить смену имени в главном меню, большая задержка
+            clearTimeout(this.timerId);
+            this.timerId = setTimeout(function () {
+                app.listCategory[index].name=value;
+                axi.get('/settings',{
+                    params: {
+                        params: 'setNemaCategory',
+                        newName: value,
+                        name: old
+                    }
+                })
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            }, 2000);
 
+        },
         // Добавялем новое обращение
         addTD: function () {
             this.tdArray.push({
@@ -115,12 +152,11 @@ var app = new Vue({
             window.scrollTo(0, document.body.scrollHeight);
         },
 
-        // Сохраняем все обращения 
+        // Сохраняем все обращения
         svTD: function () {
-            this.$emit("invis", true);
             axi.post('/set', {
                 td: this.tdArray,
-                name: app.activCat.text+'.csv',
+                name: app.listCategory[this.activCat].name + '.csv',
             })
                 .then(function (response) {
                     console.log(response);
@@ -150,37 +186,41 @@ var app = new Vue({
                 });
         },
 
-        //Загрузка категории
-        loadCat: function (index) {
-
-            if (index == this.activCat.id){
-                return
-            }
-            this.listCategory[this.activCat.id].activ=false;
-            this.listCategory[index].activ=true;
-            this.activCat.text=this.listCategory[index].text;
-            this.activCat.id=index;
-
+        //Загрузка данных с категории по индексу
+        getTDformCat: function (index) {
             this.nextTodoId = 0;
             this.tdArray = [];
             axi.get('/get', {
                 params: {
-                    name: app.listCategory[index].text
+                    name: app.listCategory[index].name
                 }
             })
-            .then(function (response) {
-                console.log(response);
-                response.data.forEach(function (element) {
-                    app.tdArray.push({
-                        id: app.nextTodoId++,
-                        qtext: element[0],
-                        atext: element[1],
+                .then(function (response) {
+                    console.log(response);
+                    response.data.forEach(function (element) {
+                        app.tdArray.push({
+                            id: app.nextTodoId++,
+                            qtext: element[0],
+                            atext: element[1],
+                        })
                     })
-                })
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        //Выбор категории
+        loadCat: function (index) {
+
+            if (index == this.activCat) {
+                return
+            }
+            this.listCategory[this.activCat].activ = false;
+            this.listCategory[index].activ = true;
+            this.activCat = index;
+
+            this.getTDformCat(index);
+
 
         }
     },
@@ -211,24 +251,24 @@ var app = new Vue({
                 list: 'list'
             }
         })
-        .then(response => (
-            response.data.forEach(function (element) {
-                app.listCategory.push({
-                    id: app.nextCat,
-                    text: element.slice(0, -4),
-                    activ: first,
-                });
-                if(first){
-                    app.activCat=app.listCategory[0];
-                }
-                app.nextCat++;
-                first=false;
+            .then(response => (
+                response.data.forEach(function (element) {
+                    app.listCategory.push({
+                        id: app.nextCat,
+                        name: element.slice(0, -4),
+                        activ: first,
+                    });
+                    if (first) {
+                        app.activCat = 0;
+                    }
+                    app.nextCat++;
+                    first = false;
 
-            })
-        ))
-        .catch(function (error) {
-            console.log(error);
-        });
+                })
+            ))
+            .catch(function (error) {
+                console.log(error);
+            });
 
     },
 })

@@ -15,7 +15,7 @@
                             <a class="button is-fullwidth"
                                v-on:click="loadCat(index)"
                                :disabled="list.activ">
-                                ${list.text}
+                                ${list.name}
                             </a>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                 <br>
                 <br>
             </div>
-
+            {#Модальное окно #}
             <div class="modal" v-if="modal" v-cloak>
                 <div class="modal-background" v-on:click="offModal"></div>
                 <div class="modal-content">
@@ -82,7 +82,7 @@
 
                             <div class="columns is-vcentered">
                                 <div class="column is-offset-1">
-                                    <input class="input" type="text" v-model="list.text">
+                                    <input class="input" type="text" v-bind:value="list.name"  v-on:input="editCat(index, $event.target.value )">
                                 </div>
                                 <div class="column is-2">
                                     <a class="delete" v-on:click="deletCat(index)"></a>

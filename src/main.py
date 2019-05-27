@@ -3,6 +3,7 @@ from flask import Flask, request, render_template
 import deep as d
 import db.db as db
 import csv, json, os
+from random import randint
 
 app = Flask(__name__)
 
@@ -14,11 +15,10 @@ agent = d.deep()
 def openfile(name):
     files = os.listdir(path="./data")
     # При загрузки страницы выдавал первый фаил не скомпилированный
+    files.remove('dataset.csv')
+    files.remove('deleted')
     if name == 'default':
-        if files[0]!='dataset.csv':
-            name = files[0]
-        else:
-            name = files[1]
+        name = files[0]
     else:
         name = name+'.csv'
     # Считывания файла
@@ -73,10 +73,11 @@ def get():
     elif 'list' in data:
         files=(os.listdir(path="./data"))
         files.remove('dataset.csv')
+        files.remove('deleted')
         files = json.dumps(files)
         return files
     else:
-        return 'Error name data'
+        return 'Error name data', 400
 
 
 # Получние и управление 
@@ -89,9 +90,20 @@ def settings():
             key = request.args.get('key')
             if key == 'ECA1B4346991DCB90A179D35AC49AC08':
                 result = agent.relern()
-                return result
+                return result, 200
+    elif 'params' in data:
+        if data['params'] == 'setNemaCategory':
+            old = os.path.join('./data', data['name']+'.csv')
+            new = os.path.join('./data', data['newName']+'.csv')
+            os.rename(old, new)
+            return new, 200
+        #TODO Не работает хз че делать
+        elif data['params'] == 'deleteCat':
+            #os.remove('./data/'+data['name']+'.csv')
+            os.rename('./data/'+data['name']+'.csv','./data/deleted/'+str(randint(100000, 1000000))+'_'+data['name']+'.csv')
+            return data['name'],200
     else:
-        return "Bad param request "
+        return "Bad param request ", 400
 
 
 #Сохраннеие вопросов
@@ -109,9 +121,9 @@ def set():
             writer = csv.writer(fp, delimiter=',')
             writer.writerow(["Question", "Answer"])  # Записать заголовок
             writer.writerows(listdata)
-        return 'ok'
+        return 'ok', 200
     else:
-        return 'error'
+        return 'error', 400
 
 
 if __name__ == "__main__":

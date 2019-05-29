@@ -134,15 +134,19 @@ var app = new Vue({
             
         },
         editCat: function (index, value) {
-            //TODO попытаться ускорить смену имени в главном меню, большая задержка
+            //TODO Поиск одинаковых названий категорий
             clearTimeout(this.timerId);
+            if (typeof this.listCategory[index].old === 'undefined'){
+                this.listCategory[index].old = this.listCategory[index].name;
+            }
+            this.listCategory[index].name=value;
             this.timerId = setTimeout(function () {
-                app.listCategory[index].name=value;
+                //console.log(app.listCategory[index]);
                 axi.get('/settings',{
                     params: {
-                        params: 'setNemaCategory',
+                        params: 'renameCategory',
                         newName: value,
-                        name: old
+                        name: app.listCategory[index].old
                     }
                 })
                     .then(function (response) {
@@ -151,6 +155,9 @@ var app = new Vue({
                     .catch(function (error) {
                         console.log(error)
                     })
+               // console.log(app.listCategory[index]);
+                app.listCategory[index].old=undefined;
+
             }, 2000);
         },
         // Добавялем новое обращение

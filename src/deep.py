@@ -36,6 +36,8 @@ class deep:
 
     def relern(self):
         filenames = os.listdir(path="./data")
+        filenames.remove('deleted')
+        filenames.remove(self.DATANAME)
         combined_csv = pd.concat([pd.read_csv('./data/' + f) for f in filenames])
         combined_csv.to_csv('./data/' + self.DATANAME, index=False)
         self.learn(True)

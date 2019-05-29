@@ -92,20 +92,25 @@ def settings():
                 result = agent.relern()
                 return result, 200
     elif 'params' in data:
-        if data['params'] == 'setNemaCategory':
+        # Переименовать
+        if data['params'] == 'renameCategory':
             old = os.path.join('./data', data['name']+'.csv')
             new = os.path.join('./data', data['newName']+'.csv')
             os.rename(old, new)
             return new, 200
+        #Удалить категорию
         elif data['params'] == 'deleteCat':
             #os.remove('./data/'+data['name']+'.csv')
             os.rename('./data/'+data['name']+'.csv','./data/deleted/'+str(randint(100000, 1000000))+'_'+data['name']+'.csv')
             return data['name'],200
+        #Создать новый фаил с категорией
         elif data['params'] == 'newCat':
             with open('./data/' + data['name']+'.csv', 'w+') as fp:
                 writer = csv.writer(fp, delimiter=',')
                 writer.writerow(["Question", "Answer"])
             return data['name'],200
+        else:
+            return 'NO find params', 400
     else:
         return "Bad param request ", 400
 

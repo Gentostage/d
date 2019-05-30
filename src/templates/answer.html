@@ -82,7 +82,11 @@
 
                             <div class="columns is-vcentered">
                                 <div class="column is-offset-1">
-                                    <input class="input" type="text" v-bind:value="list.name"  v-on:input="editCat(index, $event.target.value )">
+                                    <input class="input" type="text" v-bind:value="list.name"
+                                           v-on:input="editCat(index, $event.target.value )">
+                                    <div class="column is-12 has-background-danger has-text-centered modal-alert"
+                                    v-if="list.alert"
+                                        >${ list.alert }</div>
                                 </div>
                                 <div class="column is-2">
                                     <a class="delete" v-on:click="deletCat(index)"></a>
@@ -91,7 +95,7 @@
 
                         </div>
                         <div class="column is-8 is-offset-2">
-                            <a  class="button is-fullwidth" v-on:click="addCat"> Добавить</a>
+                            <a class="button is-fullwidth" v-on:click="addCat"> Добавить</a>
                         </div>
 
                     </div>

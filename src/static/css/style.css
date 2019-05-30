@@ -4,6 +4,11 @@
 .modal-content{
     width: 430px;
 }
+.modal-alert{
+    margin-top: 2px;
+    padding: 0px;
+     border-radius: 2px;
+}
 [v-cloak] {
     display: none;
 }

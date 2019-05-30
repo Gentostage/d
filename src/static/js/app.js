@@ -65,6 +65,7 @@ var app = new Vue({
         status: false,
         modal: false,
         timerId: null
+
     },
     methods: {
         //Работа со списком категорий
@@ -118,6 +119,7 @@ var app = new Vue({
                 id: this.nextCat++,
                 name: 'Новая категория ' + this.nextCat,
                 activ: active,
+                alert: false,
             });
             axi.get('/settings',{
                 params:{
@@ -134,29 +136,38 @@ var app = new Vue({
             
         },
         editCat: function (index, value) {
-            //TODO Поиск одинаковых названий категорий
-            clearTimeout(this.timerId);
+            let v= this.compareCat(value,index);
+            if(v){
+                this.listCategory[index].alert='Имя "'+v+'" уже используеться';
+                this.listCategory[index].name=value;
+            }else if (this.listCategory[index].alert){
+                this.listCategory[index].alert=false;
+            }
+
             if (typeof this.listCategory[index].old === 'undefined'){
                 this.listCategory[index].old = this.listCategory[index].name;
             }
+
             this.listCategory[index].name=value;
+            clearTimeout(this.timerId);
             this.timerId = setTimeout(function () {
-                //console.log(app.listCategory[index]);
-                axi.get('/settings',{
-                    params: {
-                        params: 'renameCategory',
-                        newName: value,
-                        name: app.listCategory[index].old
-                    }
-                })
-                    .then(function (response) {
-                        console.log(response);
+                if(!app.listCategory[index].alert)
+                {
+                    axi.get('/settings', {
+                        params: {
+                            params: 'renameCategory',
+                            newName: value,
+                            name: app.listCategory[index].old
+                        }
                     })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-               // console.log(app.listCategory[index]);
-                app.listCategory[index].old=undefined;
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                    app.listCategory[index].old = undefined;
+                }
 
             }, 2000);
         },
@@ -168,6 +179,15 @@ var app = new Vue({
                 atext: this.atext,
             });
             window.scrollTo(0, document.body.scrollHeight);
+        },
+        compareCat: function(v, i){
+            let r = false;
+            this.listCategory.forEach(function (value, index, array) {
+                if(index!==i && value.name.toUpperCase()===v.toUpperCase()){
+                    r= value.name;
+                }
+            });
+            return r;
         },
 
         // Сохраняем все обращения
@@ -275,6 +295,7 @@ var app = new Vue({
                         id: app.nextCat,
                         name: element.slice(0, -4),
                         activ: first,
+                        alert: false,
                     });
                     if (first) {
                         app.activCat = 0;

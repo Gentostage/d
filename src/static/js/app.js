@@ -136,6 +136,7 @@ var app = new Vue({
             
         },
         editCat: function (index, value) {
+            value=value.replace(/^\s*/,'').replace(/\s*$/,'');
             let v= this.compareCat(value,index);
             if(v){
                 this.listCategory[index].alert='Имя "'+v+'" уже используеться';
@@ -143,7 +144,10 @@ var app = new Vue({
             }else if (this.listCategory[index].alert){
                 this.listCategory[index].alert=false;
             }
-
+            if (value.length>50){
+                this.listCategory[index].alert='Имя не должно быть больше 50 символов';
+                this.listCategory[index].name=value;
+            }
             if (typeof this.listCategory[index].old === 'undefined'){
                 this.listCategory[index].old = this.listCategory[index].name;
             }

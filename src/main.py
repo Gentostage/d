@@ -1,13 +1,17 @@
-from flask import Flask, request, render_template
+import csv
+import json
+import os
+import pandas
+from random import randint
 
 import deep as d
-import db.db as db
-import csv, json, os
-from random import randint
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
 agent = d.deep()
+
+
 # db = db.database()
 
 # Считать фаил данных
@@ -20,15 +24,17 @@ def openfile(name):
     if name == 'default':
         name = files[0]
     else:
-        name = name+'.csv'
+        name = name + '.csv'
     # Считывания файла
     if name in files:
-        with open('./data/' + name, 'r') as fp:
-            reader = csv.reader(fp, delimiter=',', quotechar='"')
-            next(reader, None)  # Пропустить Заголовок
-            data_read = [row for row in reader]
-            json_string = json.dumps(data_read)
-        return json_string
+        pd = pandas.read_csv('./data/' + name, encoding="utf-8")
+        return pd.to_json(orient='records', force_ascii=False)
+
+
+@app.route("/test")
+def test():
+    pd = pandas.read_csv('./data/dataset.csv', encoding="utf-8")
+    return pd.to_json(orient='records', force_ascii=False)
 
 
 @app.route("/")
@@ -71,7 +77,7 @@ def get():
         json_string = openfile(data['name'])
         return json_string
     elif 'list' in data:
-        files=(os.listdir(path="./data"))
+        files = (os.listdir(path="./data"))
         files.remove('dataset.csv')
         files.remove('deleted')
         files = json.dumps(files)
@@ -94,28 +100,29 @@ def settings():
     elif 'params' in data:
         # Переименовать
         if data['params'] == 'renameCategory':
-            old = os.path.join('./data', data['name']+'.csv')
-            new = os.path.join('./data', data['newName']+'.csv')
+            old = os.path.join('./data', data['name'] + '.csv')
+            new = os.path.join('./data', data['newName'] + '.csv')
             os.rename(old, new)
             return new, 200
-        #Удалить категорию
+        # Удалить категорию
         elif data['params'] == 'deleteCat':
-            #os.remove('./data/'+data['name']+'.csv')
-            os.rename('./data/'+data['name']+'.csv','./data/deleted/'+str(randint(100000, 1000000))+'_'+data['name']+'.csv')
-            return data['name'],200
-        #Создать новый фаил с категорией
+            # os.remove('./data/'+data['name']+'.csv')
+            os.rename('./data/' + data['name'] + '.csv',
+                      './data/deleted/' + str(randint(100000, 1000000)) + '_' + data['name'] + '.csv')
+            return data['name'], 200
+        # Создать новый фаил с категорией
         elif data['params'] == 'newCat':
-            with open('./data/' + data['name']+'.csv', 'w+') as fp:
+            with open('./data/' + data['name'] + '.csv', 'w+') as fp:
                 writer = csv.writer(fp, delimiter=',')
                 writer.writerow(["Question", "Answer"])
-            return data['name'],200
+            return data['name'], 200
         else:
             return 'NO find params', 400
     else:
         return "Bad param request ", 400
 
 
-#Сохраннеие вопросов
+# Сохраннеие вопросов
 @app.route("/set", methods=['GET', 'POST'])
 def set():
     if request.method == 'POST':
@@ -133,6 +140,36 @@ def set():
         return 'ok', 200
     else:
         return 'error', 400
+
+
+@app.route("/setTest", methods=['GET', 'POST', 'PUT', 'DELETE'])
+def setTest():
+    if request.method == 'PUT':
+        data = request.data
+        dataDict = json.loads(data)
+        answer = dataDict['answer']
+        question = dataDict['question']
+        id = dataDict['id']
+        name = './data/' + dataDict['name']
+        df = pandas.read_csv(name)
+        df.set_value(id, 'Question', question)
+        df.set_value(id, 'Answer', answer)
+        df.to_csv(name, index=False)
+        return 'ok', 200
+
+    elif request.method == 'DELETE':
+        data = request.data
+        dataDict = json.loads(data)
+        id = dataDict['id']
+        name = './data/' + dataDict['name']
+        print(id, name)
+        df = pandas.read_csv(name)
+        df = df.drop(id)
+        df.to_csv(name, index=False)
+        return 'ok', 200
+    else:
+        return 'bad params', 401
+    return 'error', 405
 
 
 if __name__ == "__main__":

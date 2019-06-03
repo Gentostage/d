@@ -28,6 +28,7 @@ Vue.component('tdinput', {
         // Сохранить кнопка 
         svTable() {
             this.saveTable()
+            this.saveTdLine();
         },
         // Показать поле редактирование и скрыть все остальные 
         edTable() {
@@ -38,13 +39,32 @@ Vue.component('tdinput', {
             app.tdArray[this.id].qtext = this.question;
             app.tdArray[this.id].atext = this.answer;
             this.vis = true;
+        },
+        saveTdLine: function () {
+            axi.put('/setTest', {
+                question: this.question,
+                answer: this.answer,
+                name: app.listCategory[app.activCat].name + '.csv',
+                id: this.id
+            })
+                .then(function (response) {console.log(response)})
+                .catch(function (error) {console.log(error)})
+        },
+        remTd: function () {
+            app.tdArray.splice(this.id, 1)
+            axi.delete('/setTest', {
+               data:{
+                   name: app.listCategory[app.activCat].name + '.csv',
+                   id: this.id
+               }
+            })
+                .then(function (response) {console.log(response)})
+                .catch(function (error) {console.log(error)})
         }
-
     },
     created() {
 
     },
-
 });
 
 
@@ -207,7 +227,6 @@ var app = new Vue({
                     console.log(error);
                 });
         },
-
         // перезапустить и обучить нейросеть
         refrDp: function () {
             this.loadButtom = true;
@@ -242,8 +261,8 @@ var app = new Vue({
                     response.data.forEach(function (element) {
                         app.tdArray.push({
                             id: app.nextTodoId++,
-                            qtext: element[0],
-                            atext: element[1],
+                            qtext: element['Question'],
+                            atext: element['Answer'],
                         })
                     })
                 })
@@ -278,8 +297,8 @@ var app = new Vue({
                 response.data.forEach(function (element) {
                     app.tdArray.push({
                         id: app.nextTodoId++,
-                        qtext: element[0],
-                        atext: element[1],
+                        qtext: element['Question'],
+                        atext: element['Answer'],
                     });
                 })
             ))
@@ -293,25 +312,25 @@ var app = new Vue({
                 list: 'list'
             }
         })
-            .then(response => (
-                response.data.forEach(function (element) {
-                    app.listCategory.push({
-                        id: app.nextCat,
-                        name: element.slice(0, -4),
-                        activ: first,
-                        alert: false,
-                    });
-                    if (first) {
-                        app.activCat = 0;
-                    }
-                    app.nextCat++;
-                    first = false;
+        .then(response => (
+            response.data.forEach(function (element) {
+                app.listCategory.push({
+                    id: app.nextCat,
+                    name: element.slice(0, -4),
+                    activ: first,
+                    alert: false,
+                });
+                if (first) {
+                    app.activCat = 0;
+                }
+                app.nextCat++;
+                first = false;
 
-                })
-            ))
-            .catch(function (error) {
-                console.log(error);
-            });
+            })
+        ))
+        .catch(function (error) {
+            console.log(error);
+        });
 
     },
 })

@@ -48,7 +48,6 @@
                         v-bind:id="index"
                         v-bind:qtext="tdinput.qtext"
                         v-bind:atext="tdinput.atext"
-                        v-on:remove="tdArray.splice(index, 1)"
                         ref="td">
 
                     </tr>
@@ -127,7 +126,7 @@
                 </div>
             </td>
             <td>
-                <a class="delete" v-on:click="$emit('remove')"></a>
+                <a class="delete" v-on:click="remTd()"></a>
             </td>
         </tr>
     </template>

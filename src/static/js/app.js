@@ -41,7 +41,7 @@ Vue.component('tdinput', {
             this.vis = true;
         },
         saveTdLine: function () {
-            axi.put('/setTest', {
+            axi.put('/set', {
                 question: this.question,
                 answer: this.answer,
                 name: app.listCategory[app.activCat].name + '.csv',
@@ -52,7 +52,7 @@ Vue.component('tdinput', {
         },
         remTd: function () {
             app.tdArray.splice(this.id, 1)
-            axi.delete('/setTest', {
+            axi.delete('/setOld', {
                data:{
                    name: app.listCategory[app.activCat].name + '.csv',
                    id: this.id

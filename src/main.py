@@ -123,7 +123,7 @@ def settings():
 
 
 # Сохраннеие вопросов
-@app.route("/set", methods=['GET', 'POST'])
+@app.route("/setOld", methods=['GET', 'POST'])
 def set():
     if request.method == 'POST':
         data = request.data
@@ -142,7 +142,7 @@ def set():
         return 'error', 400
 
 
-@app.route("/setTest", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/set", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def setTest():
     if request.method == 'PUT':
         data = request.data

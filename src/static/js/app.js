@@ -1,4 +1,15 @@
 const axi = axios.create();
+const Toast = Swal.mixin({
+// success
+// error
+// warning
+// info
+// question
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 1000
+});
 
 Vue.component('tdinput', {
     delimiters: ['${', '}'],
@@ -47,19 +58,40 @@ Vue.component('tdinput', {
                 name: app.listCategory[app.activCat].name + '.csv',
                 id: this.id
             })
-                .then(function (response) {console.log(response)})
-                .catch(function (error) {console.log(error)})
+                .then(function (response) {
+                    console.log(response)
+                    Toast.fire({
+                        type: 'success',
+                        title: 'Сохранено'
+                    })
+                })
+                .catch(function (error) {
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Ошибка сохранения'
+                    })
+                    console.log(error)})
         },
         remTd: function () {
             app.tdArray.splice(this.id, 1)
-            axi.delete('/setOld', {
+            axi.delete('/set', {
                data:{
                    name: app.listCategory[app.activCat].name + '.csv',
                    id: this.id
                }
             })
-                .then(function (response) {console.log(response)})
-                .catch(function (error) {console.log(error)})
+                .then(function (response) {
+                    Toast.fire({
+                        type: 'success',
+                        title: 'Удаленно'
+                    })
+                    console.log(response)})
+                .catch(function (error) {
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Ошибка удаления'
+                    })
+                    console.log(error)})
         }
     },
     created() {
@@ -106,9 +138,17 @@ var app = new Vue({
             })
                 .then(function (response) {
                     console.log(response);
+                    Toast.fire({
+                        type: 'success',
+                        title: 'Категория удалена'
+                    })
                 })
                 .catch(function (error) {
                     console.log(error);
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Ошибка удаления'
+                    })
                 });
 
             if (this.listCategory.length !== 1) {
@@ -149,9 +189,17 @@ var app = new Vue({
             })
                 .then(function(response){
                     console.log(response)
+                     Toast.fire({
+                        type: 'success',
+                        title: 'Категория создана'
+                    })
                 })
                 .catch(function (error) {
                     console.log(error)
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Ошибка создания'
+                    })
                 })
             
         },
@@ -186,9 +234,17 @@ var app = new Vue({
                     })
                         .then(function (response) {
                             console.log(response);
+                            Toast.fire({
+                                type: 'success',
+                                title: 'Все Ок'
+                            })
                         })
                         .catch(function (error) {
                             console.log(error)
+                             Toast.fire({
+                                type: 'error',
+                                title: 'Ошибка'
+                            })
                         })
                     app.listCategory[index].old = undefined;
                 }
@@ -217,7 +273,7 @@ var app = new Vue({
 
         // Сохраняем все обращения
         svTD: function () {
-            axi.post('/set', {
+            axi.post('/setOld', {
                 td: this.tdArray,
                 name: app.listCategory[this.activCat].name + '.csv',
             })
@@ -242,9 +298,17 @@ var app = new Vue({
                 .then(function (response) {
                     console.log(response);
                     app.loadButtom = false;
+                    Toast.fire({
+                        type: 'success',
+                        title: 'Модель обученна'
+                    })
                 })
                 .catch(function (error) {
                     console.log(error);
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Что то пошло не так('
+                    })
                 });
         },
 

@@ -161,7 +161,6 @@ def setTest():
         dataDict = json.loads(data)
         id = dataDict['id']
         name = './data/' + dataDict['name']
-        print(id, name)
         df = pandas.read_csv(name)
         df = df.drop(id)
         df.to_csv(name, index=False)

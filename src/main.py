@@ -156,7 +156,6 @@ def setTest():
         df.set_value(id, 'Answer', answer)
         df.to_csv(name, index=False)
         return 'ok', 200
-
     elif request.method == 'DELETE':
         data = request.data
         dataDict = json.loads(data)

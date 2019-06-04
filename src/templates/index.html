@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>csv</title>
 
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bulma.min.css') }}" />
+    <link rel=stylesheet type=text/css href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" />
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}" />
 
 </head>
@@ -24,7 +24,6 @@
     {% block content %}{% endblock content %}
 </body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="{{ url_for('static', filename='js/vue.js') }}"></script>
-<script src="{{ url_for('static', filename='js/vuex.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 {% block script %}{% endblock script %}
 </html>

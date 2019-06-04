@@ -196,6 +196,7 @@ var app = new Vue({
             }, 2000);
         },
         // Добавялем новое обращение
+        //todo Сделать сохранение новой строки в таблице на сервере
         addTD: function () {
             this.tdArray.push({
                 id: this.nextTodoId++,
@@ -281,8 +282,6 @@ var app = new Vue({
             this.activCat = index;
 
             this.getTDformCat(index);
-
-
         }
     },
     beforeCreate()

@@ -38,7 +38,7 @@ Vue.component('tdinput', {
     methods: {
         // Сохранить кнопка 
         svTable() {
-            this.saveTable()
+            this.saveTable();
             this.saveTdLine();
         },
         // Показать поле редактирование и скрыть все остальные 
@@ -80,18 +80,18 @@ Vue.component('tdinput', {
                    id: this.id
                }
             })
-                .then(function (response) {
-                    Toast.fire({
-                        type: 'success',
-                        title: 'Удаленно'
-                    })
-                    console.log(response)})
-                .catch(function (error) {
-                    Toast.fire({
-                        type: 'error',
-                        title: 'Ошибка удаления'
-                    })
-                    console.log(error)})
+            .then(function (response) {
+                Toast.fire({
+                    type: 'success',
+                    title: 'Удаленно'
+                })
+                console.log(response)})
+            .catch(function (error) {
+                Toast.fire({
+                    type: 'error',
+                    title: 'Ошибка удаления'
+                })
+                console.log(error)})
         }
     },
     created() {
@@ -337,7 +337,6 @@ var app = new Vue({
         },
         //Выбор категории
         loadCat: function (index) {
-
             if (index == this.activCat) {
                 return
             }
@@ -350,7 +349,7 @@ var app = new Vue({
     },
     beforeCreate()
     // init()
-    {//Получение списка вопросов и ответов при загрузке страницы
+    {//Получение списка вопросов и ответов при загрузке страницы`
         axi.get('/get', {
             params: {
                 name: 'default'

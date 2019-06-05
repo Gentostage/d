@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <div id="mat">
+        ${msg}
+    </div>
+
+
+    <template id="skill">
+
+    </template>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/match.js') }}"></script>
+{% endblock script %}

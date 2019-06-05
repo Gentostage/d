@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+    {% for dict in d %}
+        {% for i in dict %}
+        {{ i }}
+        {% endfor %}
+        <br>
+    {% endfor %}
+</body>
+</html>

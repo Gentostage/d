@@ -5,7 +5,7 @@ import pandas
 from random import randint
 
 import deep as d
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
 
@@ -33,8 +33,16 @@ def openfile(name):
 
 @app.route("/test")
 def test():
-    pd = pandas.read_csv('./data/dataset.csv', encoding="utf-8")
-    return pd.to_json(orient='records', force_ascii=False)
+    quest = [
+        'test1',
+        'test2',
+        'test3',
+        'test4',
+    ]
+    deep = []
+    for v in quest:
+        deep.append([v, 'deep.FAQ(v)'])
+    return render_template('test.html', d=deep)
 
 
 @app.route("/")
@@ -64,9 +72,14 @@ def api():
 
 
 # Страница с меню настроек
-@app.route("/answer")
-def answer():
-    return render_template('answer.html')
+@app.route("/control/<type>")
+def control(type):
+    if type == 'qa':
+        return render_template('qa.html', navbar='on')
+    elif type == 'matching':
+        return render_template('matching.html', navbar='on')
+    else:
+        return redirect('/'), 401
 
 
 # Получение списка вопросов
@@ -169,6 +182,10 @@ def setTest():
         return 'bad params', 401
     return 'error', 405
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=3000)

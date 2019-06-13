@@ -1,14 +1,183 @@
 {% extends "index.html" %}
 
 {% block content %}
-    <div id="mat">
-        ${msg}
+    <div class="content">
+        <div id="mat">
+
+            <div class="columns">
+                <div class="column is-6 is-offset-3 skill_box">
+                    <div class="box-header">
+                        <span class="title is-3">#</span>
+                        <samp class="subtitle is-3">
+                            Приветствие
+                        </samp>
+                    </div>
+                    <hr>
+                    <span class="labl subtitle is-5">Ответ</span>
+                    <div v-for="(item, index) in HelloResponse">
+                        <div class="columns is-vcentered">
+                            <div class="column is-12">
+                                <input class="input " type="text" placeholder="Пример" v-model="item.value">
+                            </div>
+                            <div class="column is-1">
+                                <a class="delete" v-on:click="HelloResponse.splice(index,1)"></a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <p class="buttons" style="
+                       padding-top: 5px;"
+                       v-on:click="add('HelloResponse')">
+                        <a class="button is-small has-text-success  ">
+                            <span class="icon is-small">
+                              <i class="fab fas fa-plus"></i>
+                            </span>
+                            <span>Дабавить</span>
+                        </a>
+                    </p>
+                    <hr>
+                    <span class="labl subtitle is-5">Шаблон</span>
+                    <div v-for="(item, index) in HelloPattern">
+                        <div class="columns is-vcentered">
+                            <div class="column is-12">
+                                <input class="input " type="text" placeholder="Text input" v-model="item.value">
+                            </div>
+                            <div class="column is-1">
+                                <a class="delete" v-on:click="HelloPattern.splice(index,1)"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="buttons" style="
+                       padding-top: 5px;"
+                       v-on:click="add('HelloPattern')">
+                        <a class="button is-small has-text-success  ">
+                            <span class="icon is-small">
+                              <i class="fab fas fa-plus"></i>
+                            </span>
+                            <span>Дабавить</span>
+                        </a>
+                    </p>
+                    <hr>
+                    <a class="button is-primary send " v-on:click="save('hello_skill')">
+                            <span class="icon is-small">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        <span>Сохранить</span>
+                    </a>
+                </div>
+            </div>
+            {######################################################################################################################}
+            <div class="columns">
+                <div class="column is-6 is-offset-3 skill_box">
+                    <div class="">
+                        <div class="box-header">
+                            <span class="title is-3">#</span>
+                            <samp class="subtitle is-3">
+                                Прощание
+                            </samp>
+                        </div>
+                        <hr>
+                        <span class="labl subtitle is-5">Ответ</span>
+                        <div v-for="(item, index) in ByeResponse">
+                            <div class="columns is-vcentered">
+                                <div class="column is-12">
+                                    <input class="input " type="text" placeholder="Пример" v-model="item.value">
+                                </div>
+                                <div class="column is-1">
+                                    <a class="delete" v-on:click="ByeResponse.splice(index,1)"></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <p class="buttons" style="
+                        padding-top: 5px;"
+                           v-on:click="add('ByeResponse')">
+                            <a class="button is-small has-text-success  ">
+                            <span class="icon is-small">
+                              <i class="fab fas fa-plus"></i>
+                            </span>
+                                <span>Дабавить</span>
+                            </a>
+                        </p>
+                        <hr>
+                        <span class="labl subtitle is-5">Шаблон</span>
+                        <div v-for="(item, index) in ByePattern">
+                            <div class="columns is-vcentered">
+                                <div class="column is-12">
+                                    <input class="input " type="text" placeholder="Text input" v-model="item.value">
+                                </div>
+                                <div class="column is-1">
+                                    <a class="delete" v-on:click="ByePattern.splice(index,1)"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="buttons" style="
+                        padding-top: 5px;"
+                           v-on:click="add('ByePattern')">
+                            <a class="button is-small has-text-success  ">
+                            <span class="icon is-small">
+                              <i class="fab fas fa-plus"></i>
+                            </span>
+                                <span>Дабавить</span>
+                            </a>
+                        </p>
+                        <hr>
+                        <a class="button is-primary send " v-on:click="save('Bye')">
+                            <span class="icon is-small">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <span>Сохранить</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {######################################################################################################################}
+            <div class="columns">
+                <div class="column is-6 is-offset-3 skill_box">
+                    <div class="">
+                        <div class="box-header">
+                            <span class="title is-3">#</span>
+                            <samp class="subtitle is-3">
+                                Ошибки ошибки при ответе
+                            </samp>
+                        </div>
+                        <hr>
+                        <span class="labl subtitle is-5">Шаблон</span>
+
+                        <div v-for="(item, index) in FallbackResponses">
+                            <div class="columns is-vcentered">
+                                <div class="column is-12">
+                                    <input class="input " type="text" placeholder="Пример" v-model="item.value">
+                                </div>
+                                <div class="column is-1">
+                                    <a class="delete" v-on:click="FallbackResponses.splice(index,1)"></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <p class="buttons" style="
+                            padding-top: 5px;"
+                           v-on:click="add('ByePattern')">
+                            <a class="button is-small has-text-success  ">
+                                <span class="icon is-small">
+                                  <i class="fab fas fa-plus"></i>
+                                </span>
+                                <span>Дабавить</span>
+                            </a>
+                        </p>
+                        <a class="button is-primary send " v-on:click="save('Fallback')">
+                                <span class="icon is-small">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                            <span>Сохранить</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-
-    <template id="skill">
-
-    </template>
 {% endblock %}
 
 {% block script %}

@@ -1,35 +1,42 @@
-import sqlite3 as sql
-from flask import Flask
+import pandas as pd
+import json
+from datetime import datetime
 
-DATABASE = './db/database.sqlite'
+_HELLOSKILL = './db/hello_skill.csv'
+_BYESKILL = './db/bye_skill.csv'
+_FALLSKILL = './db/fallback_skill.csv'
+# _skill = pd.read_csv(_FILESKILL)
 
 
-class database:
-    def __init__(self):
-        conn = self.get_db()
-        cur = self.get_db().cursor()
-        cur.execute("""CREATE TABLE  IF NOT EXISTS data 
-                        (title TEXT,
-                        data )
-                    """)
-        conn.commit()
+def test():
+    return 'test ok'
 
-        cur.execute("""INSERT INTO data
-                          VALUES ('Test')
-                          """)
-        conn.commit()
 
-        sql = "SELECT * FROM data"
-        cur.execute(sql)
-        print(cur.fetchall())
+def save_skill(data):
+    pd.DataFrame(data['data']).to_csv('./db/'+data['name']+'.csv', index=False)
+    return 'ok'
 
-    def get_db(self):
-        db = getattr(Flask, '_database', None)
-        if db is None:
-            db = Flask._database = sql.connect(DATABASE)
-        return db
 
-    def close_connection(exception):
-        db = getattr(g, '_database', None)
-        if db is not None:
-            db.close()
+def get_skill():
+    hello = pd.read_csv(_HELLOSKILL)
+    bye = pd.read_csv(_BYESKILL)
+    fall = pd.read_csv(_FALLSKILL)
+    data = {
+        'hello': hello.to_dict(),
+        'bye': bye.to_dict(),
+        'fallback': fall.to_dict(),
+    }
+    return json.dumps(data, ensure_ascii=False)
+
+
+def remove_skill(data):
+    return 'ok'
+
+
+def add_skill(data):
+    return 'ok'
+
+
+def init():
+    bye = pd.DataFrame({'responses': ['Пока 1', 'Пока 2'], 'patterns': ['Пока 1', 'Пока 2']})
+    bye.to_csv(_BYESKILL, index=False)

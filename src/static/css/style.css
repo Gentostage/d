@@ -1,18 +1,22 @@
-.modal{
+.modal {
     display: grid;
 }
-.modal-content{
+
+.modal-content {
     width: 430px;
 }
-.modal-alert{
+
+.modal-alert {
     margin-top: 2px;
     padding: 0px;
-     border-radius: 2px;
+    border-radius: 2px;
 }
+
 [v-cloak] {
     display: none;
 }
-.pult{
+
+.pult {
     position: fixed;
     right: 15px;
     top: 100px;
@@ -21,67 +25,81 @@
     border-radius: 5px;
     width: 23%;
 }
-.list-category{
+
+.list-category {
     position: fixed;
     top: 61px;
     bottom: 0;
     margin: 10px;
     top: 100px;
 }
-.list-category .columns{
+
+.list-category .columns {
     display: block;
     height: 100%;
 }
-.list-category .columns .column{
+
+.list-category .columns .column {
     margin: 0px;
     padding: 3px;
 }
 
-td{
+td {
     width: 50%;
 }
-.table .textarea{
+
+.table .textarea {
     min-height: 300px;
 }
-.linkbox{
+
+.linkbox {
     margin-top: 10%;
 }
-.link{
+
+.link {
     border-top: 1px solid gainsboro;
     margin-bottom: 5px;
-    margin-top:5px;
+    margin-top: 5px;
     padding-left: 10%;
 }
-.nav-bar{
+
+.nav-bar {
     border-bottom: 1px solid gainsboro;
     margin-bottom: 25px;
 }
-.logo{
+
+.logo {
     padding-left: 15px;
 }
+
 .navbar-item img {
     max-height: 2.75rem;
 }
-.chatmodl{
-    border: 1px solid  gainsboro;
+
+.chatmodl {
+    border: 1px solid gainsboro;
     border-radius: 50px 10px 10px 10px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
-.dialog{
-    border: 1px solid  gainsboro;
+
+.dialog {
+    border: 1px solid gainsboro;
     box-shadow: 0 0 3px rgba(90, 139, 202, 0.404) inset;
     max-height: 600px;
     min-height: 350px;
     overflow: auto; /* Добавляем полосы прокрутки */
 }
-.dialog .column{
-    padding: 0px 5px 0px 5px ;
+
+.dialog .column {
+    padding: 0px 5px 0px 5px;
 
 }
-.has-text-right .el{
+
+.has-text-right .el {
     border-radius: 26px 5px 5px 1px;
 }
-.el{
+
+.el {
     margin-bottom: 2px;
     border-radius: 5px 5px 26px 1px;
     padding: 2px 15px 2px 15px;
@@ -89,9 +107,24 @@ td{
     display: inline-block;
 
 }
+
 #inputfiled .textarea {
     min-height: 75px;
 }
-.send{
+
+.send {
     float: right
+}
+
+.box-header{
+
+}
+
+.skill_box hr{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.labl{
+    margin-left: 15px;
 }

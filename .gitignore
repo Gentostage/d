@@ -5,6 +5,7 @@ __pycache__/
 .vscode
 .idea
 
+bulma.min.css
 src/utils/user_data
 # C extensions
 *.so

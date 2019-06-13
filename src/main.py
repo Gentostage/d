@@ -3,16 +3,12 @@ import json
 import os
 import pandas
 from random import randint
-
 import deep as d
+from .db import db
 from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
-
 agent = d.deep()
-
-
-# db = db.database()
 
 # Считать фаил данных
 # Name имя файла по дефолту первый
@@ -33,16 +29,8 @@ def openfile(name):
 
 @app.route("/test")
 def test():
-    quest = [
-        'test1',
-        'test2',
-        'test3',
-        'test4',
-    ]
-    deep = []
-    for v in quest:
-        deep.append([v, 'deep.FAQ(v)'])
-    return render_template('test.html', d=deep)
+    db.init()
+    return 'ok', 200
 
 
 @app.route("/")
@@ -181,6 +169,22 @@ def setTest():
     else:
         return 'bad params', 401
     return 'error', 405
+
+
+@app.route("/get/skills")
+def get_skills():
+    return db.get_skill(), 200
+
+
+@app.route("/set/skills", methods=[ 'PUT', 'GET'])
+def set_skills():
+    if request.method == 'PUT':
+        data = request.data
+        db.save_skill(json.dumps(data))
+        return 'ok', 200
+    else:
+        return 'method not allow', 405
+
 
 @app.errorhandler(404)
 def page_not_found(e):

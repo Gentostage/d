@@ -6,14 +6,16 @@ from deeppavlov.contrib.skills.similarity_matching_skill import SimilarityMatchi
 import pandas as pd
 import os
 
+
 class deep:
     TRAIN = False
     DATANAME = 'dataset.csv'
     MODELNAME = 'model1'
 
     def learn(self, train):
-        hello = PatternMatchingSkill(responses=['Привет!', 'Здравствуйте', 'Добрый день'],
-                                     patterns=['Привет', 'Здравствуйте', 'Добрый день'])
+        h = pd.read_csv('./db/hello_skill.csv')
+        hello = PatternMatchingSkill(responses=h['responses'].tolist(),
+                                     patterns=h['patterns'].tolist())
         bye = PatternMatchingSkill(responses=['Пока!', 'До свидания, надеюсь смог вам помочь', 'До встречи!'],
                                    patterns=['До свидания', 'Пока', 'Спасибо за помощь'])
         fallback = PatternMatchingSkill(responses=['Я не понял, но могу попробовать ответить на другой вопрос',

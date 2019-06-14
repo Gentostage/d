@@ -180,7 +180,7 @@ def get_skills():
 def set_skills():
     if request.method == 'PUT':
         data = request.data
-        db.save_skill(json.dumps(data))
+        db.save_skill(json.loads(data))
         return 'ok', 200
     else:
         return 'method not allow', 405

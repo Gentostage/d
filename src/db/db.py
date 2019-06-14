@@ -13,6 +13,7 @@ def test():
 
 
 def save_skill(data):
+    data = data['data']
     pd.DataFrame(data['data']).to_csv('./db/'+data['name']+'.csv', index=False)
     return 'ok'
 

@@ -14,7 +14,8 @@ def test():
 
 def save_skill(data):
     data = data['data']
-    pd.DataFrame(data['data']).to_csv('./db/'+data['name']+'.csv', index=False)
+    pd.DataFrame(data['data']).replace(r'^\s*$', 'NULL', regex=True).to_csv('./db/'+data['name']+'.csv', index=False,
+                                                                            na_rep='NULL')
     return 'ok'
 
 
@@ -23,9 +24,9 @@ def get_skill():
     bye = pd.read_csv(_BYESKILL)
     fall = pd.read_csv(_FALLSKILL)
     data = {
-        'hello': hello.to_dict(),
-        'bye': bye.to_dict(),
-        'fallback': fall.to_dict(),
+        'hello': hello.where((pd.notnull(hello)), None).to_dict(),
+        'bye': bye.where((pd.notnull(bye)), None).to_dict(),
+        'fallback': fall.where((pd.notnull(fall)), None).to_dict(),
     }
     return json.dumps(data, ensure_ascii=False)
 

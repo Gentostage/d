@@ -10,6 +10,7 @@ from flask import Flask, request, render_template, redirect
 app = Flask(__name__)
 agent = d.deep()
 
+
 # Считать фаил данных
 # Name имя файла по дефолту первый
 def openfile(name):
@@ -176,11 +177,12 @@ def get_skills():
     return db.get_skill(), 200
 
 
-@app.route("/set/skills", methods=[ 'PUT', 'GET'])
+@app.route("/set/skills", methods=['PUT', 'GET'])
 def set_skills():
     if request.method == 'PUT':
         data = request.data
         db.save_skill(json.loads(data))
+        agent.new_pattern_matching_skill()
         return 'ok', 200
     else:
         return 'method not allow', 405
@@ -190,6 +192,7 @@ def set_skills():
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return redirect('/')
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=3000)

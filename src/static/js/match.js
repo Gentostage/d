@@ -1,24 +1,25 @@
 const axi = axios.create();
 
-function Set(name, data){
-    axi.put('/set/skills',{
-        data:{
+function Set(name, data) {
+    axi.put('/set/skills', {
+        data: {
             name: name,
             data: data,
         }
     })
-        .then(response=>{
+        .then(response => {
             console.log(response)
         })
-        .catch(error=>{
+        .catch(error => {
             console.log(error)
         })
 }
-function Align(Response,Pattern) {
-    while(Response.length !== Pattern.length) {
-        if(Response.length < Pattern.length){
+
+function Align(Response, Pattern) {
+    while (Response.length !== Pattern.length) {
+        if (Response.length < Pattern.length) {
             Response.push(' ')
-        }else if(Response.length > Pattern.length){
+        } else if (Response.length > Pattern.length) {
             Pattern.push(' ')
         }
     }
@@ -27,19 +28,27 @@ function Align(Response,Pattern) {
         Pattern: Pattern
     }
 }
-function Get(){
-    return axi.get('/get/skills',{
-    })
-        .then(response =>{
+
+function Get() {
+    return axi.get('/get/skills', {})
+        .then(response => {
             console.log(response);
             return response.data;
         })
-        .catch(response =>{console.log(response)});
+        .catch(response => {
+            console.log(response)
+        });
 }
+
 function deleteId(array) {
     newArray = []
-    array.forEach(function(data){
-        newArray.push(data["value"])
+    array.forEach(function (data) {
+        if (data['value']!=null){
+            newArray.push(data["value"].replace(/^\s*/,'').replace(/\s*$/,''))
+        }else if (data['value']===' '){
+            newArray.push(null)
+        }
+
     });
     return newArray
 }
@@ -64,47 +73,47 @@ var mat = new Vue({
         idFallback: 0,
 
     },
-    methods:{
-        add(name){
-            if (name==='HelloResponse'){
+    methods: {
+        add(name) {
+            if (name === 'HelloResponse') {
                 this.HelloResponse.push({
                     id: this.idHelloResponse++,
                     value: ''
                 })
-            }else if(name === 'HelloPattern'){
-                 this.HelloPattern.push({
+            } else if (name === 'HelloPattern') {
+                this.HelloPattern.push({
                     id: this.idHelloPattern++,
                     value: ''
                 })
-            }else if(name === 'ByeResponse'){
-                 this.ByeResponse.push({
+            } else if (name === 'ByeResponse') {
+                this.ByeResponse.push({
                     id: this.idByeResponse++,
                     value: ''
                 })
-            }else if(name === 'ByePattern'){
-                 this.ByePattern.push({
+            } else if (name === 'ByePattern') {
+                this.ByePattern.push({
                     id: this.idByePattern++,
                     value: ''
                 })
-            }else if(name === 'FallbackResponses'){
-                 this.FallbackResponses.push({
+            } else if (name === 'FallbackResponses') {
+                this.FallbackResponses.push({
                     id: this.idFallback++,
                     value: ''
                 })
             }
         },
-        save(name){
+        save(name) {
             let Pattern;
             let Response;
-            if(name ==='hello_skill'){
-                Pattern =deleteId(this.HelloPattern);
+            if (name === 'hello_skill') {
+                Pattern = deleteId(this.HelloPattern);
                 Response = deleteId(this.HelloResponse);
-            }else if(name === 'bye_skill'){
-                Pattern =deleteId(this.ByePattern);
+            } else if (name === 'bye_skill') {
+                Pattern = deleteId(this.ByePattern);
                 Response = deleteId(this.ByeResponse);
-            }else if(name === 'fallback_skill'){
+            } else if (name === 'fallback_skill') {
                 Response = deleteId(this.FallbackResponses);
-                let data={
+                let data = {
                     responses: Response,
                 }
                 Set(name, data);
@@ -113,7 +122,7 @@ var mat = new Vue({
             let tmp = Align(Response, Pattern);
             Pattern = tmp.Pattern;
             Response = tmp.Response;
-            let data={
+            let data = {
                 responses: Response,
                 patterns: Pattern,
             };
@@ -121,44 +130,55 @@ var mat = new Vue({
         }
     },
     created() {
-        Get().then(data=>{
+        Get().then(data => {
             let helloResponses = data['hello']['responses'];
             Object.values(helloResponses).forEach(function (data) {
-                mat.HelloResponse.push({
-                    id: this.idHelloResponse++,
-                    value: data
-                })
-            })
+                if (data != null) {
+                    mat.HelloResponse.push({
+                        id: this.idHelloResponse++,
+                        value: data
+                    })
+                }
+            });
             let helloPatterns = data['hello']['patterns'];
             Object.values(helloPatterns).forEach(function (data) {
-                mat.HelloPattern.push({
-                    id: this.idHelloPattern++,
-                    value: data
-                })
-            })
+                if (data != null) {
+                    mat.HelloPattern.push({
+                        id: this.idHelloPattern++,
+                        value: data
+                    })
+                }
+            });
             let byeResponses = data['bye']['responses'];
             Object.values(byeResponses).forEach(function (data) {
-                mat.ByeResponse.push({
-                    id: this.idByeResponse++,
-                    value: data
-                })
-            })
+                if (data != null) {
+                    mat.ByeResponse.push({
+                        id: this.idByeResponse++,
+                        value: data
+                    })
+                }
+            });
             let byePatterns = data['bye']['patterns'];
             Object.values(byePatterns).forEach(function (data) {
+                if (data != null) {
+                }
                 mat.ByePattern.push({
                     id: this.idByePattern++,
                     value: data
                 })
-            })
+            });
             let fallbackResponses = data['fallback']['responses'];
             Object.values(fallbackResponses).forEach(function (data) {
+                if (data != null) {
                 mat.FallbackResponses.push({
                     id: this.idFallback++,
                     value: data,
                 })
-            });
+            }
         });
+    })
+;
 
 
-    },
+},
 })

@@ -130,7 +130,7 @@ var app = new Vue({
             this.modal = false;
         },
         deletCat: function (index) {
-            axi.get('settings',{
+            axi.get('/settings',{
                 params: {
                     params: 'deleteCat',
                     name: app.listCategory[index].name,

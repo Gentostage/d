@@ -1,4 +1,15 @@
 const axi = axios.create();
+const Toast = Swal.mixin({
+// success
+// error
+// warning
+// info
+// question
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 1000
+});
 
 function Set(name, data) {
     axi.put('/set/skills', {
@@ -8,9 +19,17 @@ function Set(name, data) {
         }
     })
         .then(response => {
+            Toast.fire({
+                type: 'success',
+                title: 'Сохранено'
+            });
             console.log(response)
         })
         .catch(error => {
+            Toast.fire({
+                type: 'error',
+                title: 'Ошибка сохранения'
+            })
             console.log(error)
         })
 }

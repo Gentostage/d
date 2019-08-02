@@ -4,7 +4,7 @@ import os
 import pandas
 from random import randint
 import deep as d
-from .db import db
+from db import db
 from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
@@ -195,4 +195,5 @@ def page_not_found(e):
 
 
 if __name__ == "__main__":
+    app.config['DEBUG'] = True
     app.run(host='0.0.0.0', port=3000)

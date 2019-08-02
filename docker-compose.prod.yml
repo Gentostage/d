@@ -8,6 +8,6 @@ services:
       - ./src:/usr/src/app
     environment:
       - FLASK_APP=main.py
-    command: python main.py
+    command: python -m flask run --port 3000 --host 0.0.0.0
     ports:
       - "3030:3000"

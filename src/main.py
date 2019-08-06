@@ -6,9 +6,40 @@ from random import randint
 import deep as d
 from db import db
 from flask import Flask, request, render_template, redirect
+from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import LoginManager
+
 
 app = Flask(__name__)
 agent = d.deep()
+login = LoginManager(app)
+login.login_view = 'login'
+user = db.User()
+
+@login.user_loader
+def load_user(id):
+    return user.get_user(id)
+
+PROJECT_PATH = './'
+
+try:
+    SECRET_KEY
+except NameError:
+    SECRET_FILE = os.path.join(PROJECT_PATH, 'secret.txt')
+    try:
+        SECRET_KEY = open(SECRET_FILE).read().strip()
+    except IOError:
+        try:
+            import random
+
+            SECRET_KEY = ''.join(
+                [random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
+            secret = open(SECRET_FILE, 'w')
+            secret.write(SECRET_KEY)
+            secret.close()
+        except IOError:
+            Exception('Please create a %s file with random characters \
+            to generate your secret key!' % SECRET_FILE)
 
 
 # Считать фаил данных
@@ -31,12 +62,51 @@ def openfile(name):
 @app.route("/test")
 def test():
     db.init()
-    return 'ok', 200
+    return SECRET_KEY, 200
 
 
 @app.route("/")
 def index():
     return render_template('main.html')
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect('/')
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect('/')
+        return render_template('login.html')
+
+    if request.method == 'POST':
+        login = request.form['login']
+        password = request.form['password']
+        if not login or not password:
+            return 'Заполните все поля'
+        if request.form.get('create'):
+            result = user.create_new_user(login.lower(), password)
+            if result == 'Пользователь уже зарегистрирован':
+                return result
+            return result
+        elif request.form.get('login'):
+            result = user.get_hash(login.lower())
+            if result:
+                result = user.check_password(password)
+                if result:
+                    login_user(user, remember = login)
+                    next_page = request.args.get('next')
+                    print(next_page)
+                    if not next_page or url_parse(next_page).netloc != '':
+                        next_page = '/'
+                    return redirect(next_page)
+                else:
+                    return redirect('/login')
+            else:
+                return redirect('/login')
 
 
 @app.route("/chat")
@@ -62,6 +132,7 @@ def api():
 
 # Страница с меню настроек
 @app.route("/control/<type>")
+@login_required
 def control(type):
     if type == 'qa':
         return render_template('qa.html', navbar='on')
@@ -195,5 +266,9 @@ def page_not_found(e):
 
 
 if __name__ == "__main__":
+    app.secret_key = SECRET_KEY
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+
     app.config['DEBUG'] = True
     app.run(host='0.0.0.0', port=3000)

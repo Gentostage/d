@@ -19,21 +19,27 @@
             <img class='imglogo' src="{{ url_for('static', filename='img/logo.png') }}">
         </a>
     </div>
-    {% if navbar %}
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-end">
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-end">
+            {% if navbar %}
                 <a href="/control/matching" class="navbar-item">
-                     Cопоставление
+                    Cопоставление
                 </a>
                 <a href="/control/qa" class="navbar-item">
                     Вопрос Ответ
                 </a>
-                <a  href="/doc" class="navbar-item">
+                <a href="/doc" class="navbar-item">
                     Документация
                 </a>
-            </div>
+            {% endif %}
+                 <a href="" class="navbar-item">
+                    {{current_user.username }}
+                </a>
         </div>
-    {% endif %}
+    </div>
+
+
 </nav>
 
 {% block content %}{% endblock content %}

@@ -3,7 +3,16 @@
 {% block content %}
     <div class="content">
         <div class="columns">
-            <div class="column is-3 is-offset-4">
+            {% if massage %}
+            <div class="column has-background-danger  has-text-centered">
+                <h3 class="has-text-white-bis">
+                    {{ massage }}
+                </h3>
+            </div>
+            {% endif %}
+        </div>
+        <div class="columns is-centered">
+            <div class="column is-3 ">
                 <form action="/login" method="post">
                     <div class="column is-12 has-text-centered ">
                         <h3 class="">Вход</h3>
@@ -27,14 +36,14 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <input class="input" name="password" type="password" required  size="30">
+                                    <input class="input" name="password" type="password" required size="30">
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="column is-12 has-text-right">
                         <input class="button is-success is-outlined" type="submit" name="login" value="Войти">
-                        <input class="button is-link is-outlined" type="submit"  name="create" value="Регистрация">
+                        <input class="button is-link is-outlined" type="submit" name="create" value="Регистрация">
                     </div>
                 </form>
             </div>

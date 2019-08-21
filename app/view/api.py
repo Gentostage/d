@@ -59,10 +59,8 @@ def category():
 
     if request.method == 'POST':  # Создание новой
         name = dataDict['name']
-        #TODO Заменить на pandas
-        with open('./app/data/' + name + '.csv', 'w+') as fp:
-            writer = csv.writer(fp, delimiter=',')
-            writer.writerow(["Question", "Answer"])
+        df = pd.DataFrame(columns=['login', 'password', 'token'])
+        df.to_csv('./app/data/' + name + '.csv', index=False)
         return name, 200
 
 
@@ -72,20 +70,21 @@ def setOLD():
     Сохранение всех вопросов и ответов на кнопку
     TODO Удалить
     """
-    if request.method == 'POST':
-        data = request.data
-        tmpdata = json.loads(data)
-        listdata = []
-        for tmp in tmpdata['td']:
-            templist = [tmp['qtext'], tmp['atext']]
-            listdata.append(templist)
-        with open('./app/data/' + tmpdata['name'], 'w') as fp:
-            writer = csv.writer(fp, delimiter=',')
-            writer.writerow(["Question", "Answer"])  # Записать заголовок
-            writer.writerows(listdata)
-        return 'ok', 200
-    else:
-        return 'error', 400
+    return 'not use', 243
+    # if request.method == 'POST':
+    #     data = request.data
+    #     tmpdata = json.loads(data)
+    #     listdata = []
+    #     for tmp in tmpdata['td']:
+    #         templist = [tmp['qtext'], tmp['atext']]
+    #         listdata.append(templist)
+    #     with open('./app/data/' + tmpdata['name'], 'w') as fp:
+    #         writer = csv.writer(fp, delimiter=',')
+    #         writer.writerow(["Question", "Answer"])  # Записать заголовок
+    #         writer.writerows(listdata)
+    #     return 'ok', 200
+    # else:
+    #     return 'error', 400
 
 
 @app.route("/data", methods=['GET', 'PUT', 'DELETE'])

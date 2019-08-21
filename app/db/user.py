@@ -13,9 +13,7 @@ class User(UserMixin):
         import os.path
         if not os.path.exists(self.USERS_FILE):
             df = pd.DataFrame(columns=['login', 'password', 'token'])
-            df.replace(r'^\s*$', 'NULL', regex=True).to_csv(self.USERS_FILE,
-                                                            index=False,
-                                                            na_rep='NULL')
+            df.to_csv(self.USERS_FILE, index=False)
 
     def get_hash(self, login: str) -> bool:
         df = pd.read_csv(self.USERS_FILE, encoding="utf-8")

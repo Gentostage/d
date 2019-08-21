@@ -130,9 +130,9 @@ var app = new Vue({
             this.modal = false;
         },
         deletCat: function (index) {
-            axi.get('/settings',{
-                params: {
-                    params: 'deleteCat',
+            console.log(app.listCategory[index].name)
+            axi.delete('/category',{
+                data:{
                     name: app.listCategory[index].name,
                 }
             })
@@ -181,11 +181,8 @@ var app = new Vue({
                 activ: active,
                 alert: false,
             });
-            axi.get('/settings',{
-                params:{
-                    params: 'newCat',
-                    name: 'Новая категория ' + this.nextCat
-                }    
+            axi.post('/category',{
+                name: 'Новая категория ' + this.nextCat
             })
                 .then(function(response){
                     console.log(response)
@@ -225,19 +222,12 @@ var app = new Vue({
             this.timerId = setTimeout(function () {
                 if(!app.listCategory[index].alert)
                 {
-                    axi.get('/settings', {
-                        params: {
-                            params: 'renameCategory',
+                    axi.put('/category', {
                             newName: value,
                             name: app.listCategory[index].old
-                        }
                     })
                         .then(function (response) {
                             console.log(response);
-                            Toast.fire({
-                                type: 'success',
-                                title: 'Все Ок'
-                            })
                         })
                         .catch(function (error) {
                             console.log(error)

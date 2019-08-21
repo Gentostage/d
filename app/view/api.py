@@ -8,6 +8,7 @@ from flask import Flask, request, render_template, redirect
 from random import randint
 from app.db import skill, qa
 
+
 # API FAQ
 @app.route("/api", methods=['GET', 'POST'])
 def api():
@@ -22,6 +23,7 @@ def api():
         return a
     else:
         return 'error wrong method'
+
 
 # Получние и управление
 @app.route("/settings")
@@ -57,6 +59,34 @@ def settings():
             return 'NO find params', 400
     else:
         return "Bad param request ", 400
+
+
+@app.route("/category", methods=['DELETE', 'PUT', 'POST'])
+def category():
+    """ Управление категориями """
+    data = request.data
+    dataDict = json.loads(data)
+
+    if request.method == 'DELETE':  # Удалить
+        name = dataDict['name']
+        os.rename('./app/data/' + name + '.csv',
+                  './app/data/deleted/' + str(randint(100000, 1000000)) + '_' + name + '.csv')
+        return name, 200
+
+    if request.method == 'PUT':  # Переименовать
+        name = dataDict['name']
+        newName = dataDict['newName']
+        old = os.path.join('./app/data/', name + '.csv')
+        new = os.path.join('./app/data/', newName + '.csv')
+        os.rename(old, new)
+        return new, 200
+
+    if request.method == 'POST':  # Создание новой
+        name = dataDict['name']
+        with open('./app/data/' + name + '.csv', 'w+') as fp:
+            writer = csv.writer(fp, delimiter=',')
+            writer.writerow(["Question", "Answer"])
+        return name, 200
 
 
 @app.route("/setOld", methods=['GET', 'POST'])
@@ -112,6 +142,7 @@ def data():
         df = df.drop(id)
         df.to_csv(name, index=False)
         return 'ok', 200
+
 
 @app.route("/data/list")
 def data_list():

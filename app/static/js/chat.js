@@ -50,7 +50,7 @@ var chat = new Vue({
                 console.log(response);
                 chat.messArray.push({
                     id: chat.nextTodoId++,
-                    message: response.qa,
+                    message: response.data,
                     answer: false,
                 })
             })

@@ -277,11 +277,10 @@ var app = new Vue({
         // перезапустить и обучить нейросеть
         refrDp: function () {
             this.loadButtom = true;
-            axi.get('/settings', {
+            axi.get('/settings/relern', {
                 timeout: 1000000,
                 params: {
                     key: 'ECA1B4346991DCB90A179D35AC49AC08',
-                    relenr: 'on'
                 }
 
             })

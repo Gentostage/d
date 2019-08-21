@@ -45,10 +45,10 @@ class deep:
         return 'ok'
 
     def relern(self):
-        filenames = os.listdir(path="./data")
+        filenames = os.listdir(path="./app/data")
         filenames.remove('deleted')
-        filenames.remove(self.DATANAME)
-        combined_csv = pd.concat([pd.read_csv('./data/' + f) for f in filenames])
-        combined_csv.to_csv('./data/' + self.DATANAME, index=False)
+        filenames.remove('dataset.csv')
+        combined_csv = pd.concat([pd.read_csv('./app/data/' + f) for f in filenames])
+        combined_csv.to_csv(self.DATANAME, index=False)
         self.learn(True)
         return "ok"

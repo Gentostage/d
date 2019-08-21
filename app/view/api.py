@@ -1,9 +1,6 @@
+import csv, os, json, pandas
 from app import app
 from app import agent
-import csv
-import json
-import os
-import pandas
 from flask import Flask, request, render_template, redirect
 from random import randint
 from app.db import skill, qa
@@ -12,53 +9,32 @@ from app.db import skill, qa
 # API FAQ
 @app.route("/api", methods=['GET', 'POST'])
 def api():
+    massage = ''
     if request.method == 'POST':
         data = request.data
-        massage = json.loads(data)
+        dataJson = json.loads(data)
+        massage = dataJson['massage']
         if massage == '':
-            return
-        a = str(agent.FAQ(massage['massage']))
-        leng = len(a)
-        a = a[2:leng - 2]
-        return a
-    else:
-        return 'error wrong method'
+            return 'Error params, massage is null', 400
+
+    if request.method == 'GET':
+        massage = request.args.get('massage')
+        if massage == '':
+            return 'Error params, massage is null', 400
+
+    a = str(agent.FAQ(massage))
+    leng = len(a)
+    a = a[2:leng - 2]
+    return a
 
 
-# Получние и управление
-@app.route("/settings")
-def settings():
-    data = request.args
-    # Обучить
-    if 'relenr' in data:
-        if data['relenr'] == 'on':
-            key = request.args.get('key')
-            if key == 'ECA1B4346991DCB90A179D35AC49AC08':
-                result = agent.relern()
-                return result, 200
-    elif 'params' in data:
-        # Переименовать
-        if data['params'] == 'renameCategory':
-            old = os.path.join('./app/data/', data['name'] + '.csv')
-            new = os.path.join('./app/data/', data['newName'] + '.csv')
-            os.rename(old, new)
-            return new, 200
-        # Удалить категорию
-        elif data['params'] == 'deleteCat':
-            # os.remove('./app/data/'+data['name']+'.csv')
-            os.rename('./app/data/' + data['name'] + '.csv',
-                      './app/data/deleted/' + str(randint(100000, 1000000)) + '_' + data['name'] + '.csv')
-            return data['name'], 200
-        # Создать новый фаил с категорией
-        elif data['params'] == 'newCat':
-            with open('./app/data/' + data['name'] + '.csv', 'w+') as fp:
-                writer = csv.writer(fp, delimiter=',')
-                writer.writerow(["Question", "Answer"])
-            return data['name'], 200
-        else:
-            return 'NO find params', 400
-    else:
-        return "Bad param request ", 400
+@app.route("/settings/relern")
+def settings_relern():
+    """ Обучаем """
+    key = request.args.get('key')
+    if key == 'ECA1B4346991DCB90A179D35AC49AC08':
+        result = agent.relern()
+        return result, 200
 
 
 @app.route("/category", methods=['DELETE', 'PUT', 'POST'])
@@ -83,6 +59,7 @@ def category():
 
     if request.method == 'POST':  # Создание новой
         name = dataDict['name']
+        #TODO Заменить на pandas
         with open('./app/data/' + name + '.csv', 'w+') as fp:
             writer = csv.writer(fp, delimiter=',')
             writer.writerow(["Question", "Answer"])
@@ -102,7 +79,6 @@ def setOLD():
         for tmp in tmpdata['td']:
             templist = [tmp['qtext'], tmp['atext']]
             listdata.append(templist)
-
         with open('./app/data/' + tmpdata['name'], 'w') as fp:
             writer = csv.writer(fp, delimiter=',')
             writer.writerow(["Question", "Answer"])  # Записать заголовок
@@ -120,17 +96,9 @@ def data():
         json_string = qa.open_file(name)
         return json_string
 
-    if request.method == 'PUT':
+    if request.method == 'PUT': # Сохраняем
         data = request.data
-        dataDict = json.loads(data)
-        answer = dataDict['answer']
-        question = dataDict['question']
-        id = dataDict['id']
-        name = './app/data/' + dataDict['name']
-        df = pandas.read_csv(name)
-        df.set_value(id, 'Question', question)
-        df.set_value(id, 'Answer', answer)
-        df.to_csv(name, index=False)
+        qa.save(data)
         return 'ok', 200
 
     if request.method == 'DELETE':
@@ -159,7 +127,7 @@ def skills():
     if request.method == 'PUT':
         data = request.data
         skill.save_skill(json.loads(data))
-        agent.new_pattern_matching_skill()
+        #agent.new_pattern_matching_skill()
         return 'ok', 200
     if request.method == 'GET':
         return skill.get_skill(), 200

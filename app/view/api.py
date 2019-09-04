@@ -1,8 +1,12 @@
-import csv, os, json, pandas
-from app import app
-from app import agent
-from flask import Flask, request, render_template, redirect
+import json
+import os
+import pandas as pd
 from random import randint
+
+from flask import request
+
+from app import agent
+from app import app
 from app.db import skill, qa
 
 
@@ -71,20 +75,6 @@ def setOLD():
     TODO Удалить
     """
     return 'not use', 243
-    # if request.method == 'POST':
-    #     data = request.data
-    #     tmpdata = json.loads(data)
-    #     listdata = []
-    #     for tmp in tmpdata['td']:
-    #         templist = [tmp['qtext'], tmp['atext']]
-    #         listdata.append(templist)
-    #     with open('./app/data/' + tmpdata['name'], 'w') as fp:
-    #         writer = csv.writer(fp, delimiter=',')
-    #         writer.writerow(["Question", "Answer"])  # Записать заголовок
-    #         writer.writerows(listdata)
-    #     return 'ok', 200
-    # else:
-    #     return 'error', 400
 
 
 @app.route("/data", methods=['GET', 'PUT', 'DELETE'])
@@ -105,7 +95,7 @@ def data():
         dataDict = json.loads(data)
         id = dataDict['id']
         name = './app/data/' + dataDict['name']
-        df = pandas.read_csv(name)
+        df = pd.read_csv(name)
         df = df.drop(id)
         df.to_csv(name, index=False)
         return 'ok', 200

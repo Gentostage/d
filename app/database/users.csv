@@ -1,2 +1,0 @@
-login,password,token
-admin,pbkdf2:sha256:150000$TdJjcxMz$fff00995787da9a3056c8d72a110c9f267b635839009844a9a83bb95d71555ea,NULL

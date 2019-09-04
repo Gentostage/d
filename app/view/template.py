@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session
 from flask_login import current_user, login_user, login_required, logout_user
 
 from app import app
@@ -37,6 +37,12 @@ def control_matching():
 @login_required
 def control_qa():
     return render_template('qa.html', navbar='on')
+
+
+@app.route("/control/tree")
+@login_required
+def control_tree():
+    return render_template('tree.html', navbar='on')
 
 
 @app.route("/login", methods=['GET', 'POST'])

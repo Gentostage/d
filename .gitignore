@@ -4,7 +4,11 @@ __pycache__/
 *$py.class
 .vscode
 .idea
+*/data
+*/database
+*/model
 
+secret.txt
 bulma.min.css
 src/utils/user_data
 # C extensions

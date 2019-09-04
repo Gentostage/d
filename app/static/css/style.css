@@ -105,7 +105,6 @@ td {
     padding: 2px 15px 2px 15px;
     background-color: #caead97a;
     display: inline-block;
-
 }
 
 #inputfiled .textarea {
@@ -127,4 +126,10 @@ td {
 
 .labl{
     margin-left: 15px;
+}
+
+.box_tree{
+    min-height: 825px;
+    border: solid 1px gray;
+    padding: 5px;
 }

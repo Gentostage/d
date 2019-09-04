@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import json
 
 
 def open_file(name):
@@ -28,7 +29,7 @@ def save(data):
     question = dataDict['question']
     id = dataDict['id']
     name = './app/data/' + dataDict['name']
-    df = pandas.read_csv(name)
+    df = pd.read_csv(name)
     df.set_value(id, 'Question', question)
     df.set_value(id, 'Answer', answer)
     df.to_csv(name, index=False)
